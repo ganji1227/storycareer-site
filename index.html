@@ -354,14 +354,7 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
     offX.font=`300 ${fs}px "Noto Serif JP", serif`;
     offX.textAlign='center';offX.textBaseline='middle';
     try{offX.letterSpacing=`${fs*0.15}px`}catch(e){}
-    // On mobile, wrap text if needed (single line may overflow)
-    if(isMobile&&W<500){
-      const half=Math.ceil(textStr.length/2);
-      offX.fillText(textStr.slice(0,half),W/2,H/2-fs*0.7);
-      offX.fillText(textStr.slice(half),W/2,H/2+fs*0.7);
-    }else{
-      offX.fillText(textStr,W/2,H/2);
-    }
+    offX.fillText(textStr,W/2,H/2);
     const id=offX.getImageData(0,0,W,H).data;
     const cands=[];
     for(let y=0;y<H;y+=1)for(let x=0;x<W;x+=1){
