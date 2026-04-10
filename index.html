@@ -622,7 +622,7 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
     const heroMax=window.innerHeight*2;
     scrollTarget=heroMax>0?Math.min(1,window.scrollY/heroMax):0;
     // Start dispersing when 80% through hero, fully ambient by 200px past hero
-    const disperseStart=isMobile?lockedHeroMax*0.88:heroMax*0.80;
+    const disperseStart=isMobile?lockedHeroMax*0.97:heroMax*0.80;
     const disperseEnd=isMobile?lockedHeroMax+100:heroMax+200;
     pastHeroT=Math.min(1,Math.max(0,(window.scrollY-disperseStart)/(disperseEnd-disperseStart)));
   }
@@ -673,7 +673,7 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
     else{phase='organic';phaseT=1}
     // Debug overlay
     if(!document.getElementById('dbg')){const d=document.createElement('div');d.id='dbg';d.style.cssText='position:fixed;top:10px;right:10px;z-index:999;color:#ffaa44;font-size:12px;font-family:monospace;background:rgba(0,0,0,0.7);padding:6px 10px;border-radius:4px';document.body.appendChild(d)}
-    document.getElementById('dbg').textContent=`v16 ${phase} prog:${scrollProgress.toFixed(3)} pHT:${pastHeroT.toFixed(2)}`;
+    document.getElementById('dbg').textContent=`v17 ${phase} prog:${scrollProgress.toFixed(3)} pHT:${pastHeroT.toFixed(2)}`;
 
     let targetActive=N_BEFORE;
     if(phase==='reform'){targetActive=Math.floor(N_BEFORE+(N_TOTAL-N_BEFORE)*ss(phaseT))}
