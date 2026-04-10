@@ -631,7 +631,7 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
       scrollProgress=scrollTarget;
     }else{
       // First time: smooth lerp at fixed rate (max ~0.8% per frame)
-      const maxStep=0.008;
+      const maxStep=isMobile?0.05:0.008;
       const diff=scrollTarget-scrollProgress;
       if(Math.abs(diff)<0.001){scrollProgress=scrollTarget}
       else{scrollProgress+=Math.sign(diff)*Math.min(Math.abs(diff),maxStep)}
