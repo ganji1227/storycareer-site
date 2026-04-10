@@ -673,7 +673,7 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
     else{phase='organic';phaseT=1}
     // Debug overlay
     if(!document.getElementById('dbg')){const d=document.createElement('div');d.id='dbg';d.style.cssText='position:fixed;top:10px;right:10px;z-index:999;color:#ffaa44;font-size:12px;font-family:monospace;background:rgba(0,0,0,0.7);padding:6px 10px;border-radius:4px';document.body.appendChild(d)}
-    document.getElementById('dbg').textContent=`v18 ${phase} prog:${scrollProgress.toFixed(3)} pHT:${pastHeroT.toFixed(2)}`;
+    document.getElementById('dbg').textContent=`v19 ${phase} prog:${scrollProgress.toFixed(3)} pHT:${pastHeroT.toFixed(2)}`;
 
     let targetActive=N_BEFORE;
     if(phase==='reform'){targetActive=Math.floor(N_BEFORE+(N_TOTAL-N_BEFORE)*ss(phaseT))}
@@ -804,9 +804,13 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
       const coreAlpha=pt.alpha*(1+edgeBoost*0.4);
       if(isMobile){
         // Lightweight: single filled circle, no radialGradient
-        const cw=vT*60+edgeBoost*40;
-        ctx.fillStyle=`rgba(${Math.min(255,c.r+cw)},${Math.min(255,c.g+cw)},${Math.min(255,c.b+cw)},${Math.min(1,coreAlpha*0.8)})`;
-        ctx.beginPath();ctx.arc(pt.x,pt.y,pt.radius*1.3,0,Math.PI*2);ctx.fill();
+        // Edge particles in organic: full opacity, larger for crisp outline
+        const isOrgEdge=(tp&&tp.isEdge&&phase==='organic'&&pastHeroT<0.3)?1:0;
+        const cw=vT*60+edgeBoost*40+isOrgEdge*60;
+        const mAlpha=Math.min(1,coreAlpha*(isOrgEdge?1.5:0.8));
+        const mRadius=pt.radius*(isOrgEdge?1.8:1.3);
+        ctx.fillStyle=`rgba(${Math.min(255,c.r+cw)},${Math.min(255,c.g+cw)},${Math.min(255,c.b+cw)},${mAlpha})`;
+        ctx.beginPath();ctx.arc(pt.x,pt.y,mRadius,0,Math.PI*2);ctx.fill();
       }else{
         const gr=ctx.createRadialGradient(pt.x,pt.y,0,pt.x,pt.y,glowR);
         gr.addColorStop(0,`rgba(${Math.min(255,c.r+40+edgeBoost*30)},${Math.min(255,c.g+30+edgeBoost*30)},${Math.min(255,c.b+20+edgeBoost*20)},${Math.min(1,coreAlpha*0.6)})`);
