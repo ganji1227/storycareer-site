@@ -651,10 +651,12 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
   function animate(){
     requestAnimationFrame(animate);updateScroll();ctx.clearRect(0,0,W,H);const now=performance.now();
     let phase,phaseT=0;
-    if(scrollProgress<0.08)phase='rect';
-    else if(scrollProgress<0.20){phase='scatter';phaseT=(scrollProgress-0.08)/0.12}
-    else if(scrollProgress<0.35){phase='network';phaseT=(scrollProgress-0.20)/0.15}
-    else if(scrollProgress<0.50){phase='reform';phaseT=(scrollProgress-0.35)/0.15}
+    // Mobile: phases start much earlier (rect ends at 2% instead of 8%)
+    const P=isMobile?{r:0.02,s:0.12,n:0.22,rf:0.35,o:0.45}:{r:0.08,s:0.20,n:0.35,rf:0.50,o:0.50};
+    if(scrollProgress<P.r)phase='rect';
+    else if(scrollProgress<P.s){phase='scatter';phaseT=(scrollProgress-P.r)/(P.s-P.r)}
+    else if(scrollProgress<P.n){phase='network';phaseT=(scrollProgress-P.s)/(P.n-P.s)}
+    else if(scrollProgress<P.rf){phase='reform';phaseT=(scrollProgress-P.n)/(P.rf-P.n)}
     else{phase='organic';phaseT=1}
 
     let targetActive=N_BEFORE;
