@@ -664,8 +664,8 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
     requestAnimationFrame(animate);updateScroll();ctx.clearRect(0,0,W,H);const now=performance.now();
     let phase,phaseT=0;
     // Mobile: phases start much earlier (rect ends at 2% instead of 8%)
-    // Mobile: rect 1%, scatter 1-20%, network 20-45%, reform 45-75%, organic 75%+ (less dead space at start/end)
-    const P=isMobile?{r:0.01,s:0.20,n:0.45,rf:0.75,o:0.75}:{r:0.08,s:0.20,n:0.35,rf:0.50,o:0.50};
+    // Mobile: rect 0.5%, organic at 92% (minimal dead space)
+    const P=isMobile?{r:0.005,s:0.18,n:0.42,rf:0.72,o:0.92}:{r:0.08,s:0.20,n:0.35,rf:0.50,o:0.50};
     if(scrollProgress<P.r)phase='rect';
     else if(scrollProgress<P.s){phase='scatter';phaseT=(scrollProgress-P.r)/(P.s-P.r)}
     else if(scrollProgress<P.n){phase='network';phaseT=(scrollProgress-P.s)/(P.n-P.s)}
