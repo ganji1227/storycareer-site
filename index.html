@@ -664,8 +664,8 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
     let phase,phaseT=0;
     // Mobile: phases start much earlier (rect ends at 2% instead of 8%)
     // Mobile: rect 0.5%, organic at 92% (minimal dead space)
-    // Mobile: organic at 65% → Potential visible for 65-100% of 400vh = 140vh
-    const P=isMobile?{r:0.005,s:0.15,n:0.35,rf:0.55,o:0.65}:{r:0.08,s:0.20,n:0.35,rf:0.50,o:0.50};
+    // Mobile: organic at 82% → Potential visible for 82-100% of 400vh = 72vh
+    const P=isMobile?{r:0.005,s:0.15,n:0.38,rf:0.65,o:0.82}:{r:0.08,s:0.20,n:0.35,rf:0.50,o:0.50};
     if(scrollProgress<P.r)phase='rect';
     else if(scrollProgress<P.s){phase='scatter';phaseT=(scrollProgress-P.r)/(P.s-P.r)}
     else if(scrollProgress<P.n){phase='network';phaseT=(scrollProgress-P.s)/(P.n-P.s)}
@@ -673,7 +673,7 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
     else{phase='organic';phaseT=1}
     // Debug overlay
     if(!document.getElementById('dbg')){const d=document.createElement('div');d.id='dbg';d.style.cssText='position:fixed;top:10px;right:10px;z-index:999;color:#ffaa44;font-size:12px;font-family:monospace;background:rgba(0,0,0,0.7);padding:6px 10px;border-radius:4px';document.body.appendChild(d)}
-    document.getElementById('dbg').textContent=`v17 ${phase} prog:${scrollProgress.toFixed(3)} pHT:${pastHeroT.toFixed(2)}`;
+    document.getElementById('dbg').textContent=`v18 ${phase} prog:${scrollProgress.toFixed(3)} pHT:${pastHeroT.toFixed(2)}`;
 
     let targetActive=N_BEFORE;
     if(phase==='reform'){targetActive=Math.floor(N_BEFORE+(N_TOTAL-N_BEFORE)*ss(phaseT))}
