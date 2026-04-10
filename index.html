@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STORY CAREER | 人の可能性を再定義する。</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Noto+Serif+JP:wght@300;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{background:#0a0a0a;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica Neue',Arial,sans-serif}
+
+/* ===== Hero (from top-hero.html) ===== */
+#hero-scroll-space{height:200vh;position:relative;z-index:1}
+#canvas-container{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1}
+canvas#c{display:block;width:100%;height:100%}
+#canvas-container::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.55) 100%);pointer-events:none}
+#glow-overlay{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,170,68,0.06) 0%,transparent 70%);pointer-events:none;z-index:2;opacity:0;transition:opacity 0.3s}
+.hero-text{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;pointer-events:none;text-align:center;width:90vw;max-width:800px}
+.hero-text h1{font-family:'Noto Serif JP',serif;font-size:clamp(1.5rem,3.8vw,3rem);font-weight:300;letter-spacing:0.15em;line-height:1.6;color:rgba(255,255,255,0.9);transition:font-weight 0.6s,opacity 0.6s}
+.hero-text h1 .char{opacity:0;transition:opacity 0.3s ease}
+.hero-text h1 .char.visible{opacity:1}
+.hero-text h1.bloomed{font-weight:700}
+.hero-text h1.bloomed .char{background:linear-gradient(135deg,#ffaa44,#ff8844,#ffcc66);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-text .subtitle{font-family:'Noto Sans JP',sans-serif;font-size:clamp(0.7rem,1.4vw,1rem);font-weight:300;letter-spacing:0.35em;color:rgba(255,255,255,0.5);margin-top:1.2rem;opacity:0;transition:opacity 0.8s ease}
+.hero-text .subtitle.visible{opacity:1}
+#progress-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#4a90d9,#ffaa44);z-index:10;width:0%;transition:none}
+.scroll-indicator{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:0.5rem;opacity:0.6;transition:opacity 0.5s}
+.scroll-indicator.hidden{opacity:0;pointer-events:none}
+.scroll-indicator span{font-family:'Noto Sans JP',sans-serif;font-size:0.65rem;letter-spacing:0.2em;color:rgba(255,255,255,0.4);font-weight:300}
+.scroll-arrow{width:16px;height:16px;border-right:1px solid rgba(255,255,255,0.35);border-bottom:1px solid rgba(255,255,255,0.35);transform:rotate(45deg);animation:scrollBounce 2s ease-in-out infinite}
+@keyframes scrollBounce{0%,100%{transform:translateY(0) rotate(45deg)}50%{transform:translateY(6px) rotate(45deg)}}
+
+/* ===== Ambient background canvas ===== */
+/* ambient canvas removed — hero canvas becomes ambient */
+
+/* ===== Hero-to-content transition ===== */
+/* hero-transition removed */
+
+/* ===== Content sections ===== */
+#content{position:relative;z-index:4;background:transparent}
+#content::before{content:'';position:absolute;top:0;left:0;right:0;height:300px;background:linear-gradient(to bottom,transparent 0%,rgba(10,10,10,0.65) 100%);pointer-events:none;z-index:0}
+#content::after{content:'';position:absolute;top:300px;left:0;right:0;bottom:0;background:rgba(10,10,10,0.65);pointer-events:none;z-index:0}
+.section{padding:120px 0;position:relative;overflow:hidden}
+.section-inner{max-width:1200px;margin:0 auto;padding:0 40px;position:relative;z-index:2}
+.section-label{font-family:'Noto Sans JP',sans-serif;font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:1rem;font-weight:400}
+.section-heading{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.3rem,2.5vw,2rem);color:rgba(255,255,255,0.9);letter-spacing:0.15em;line-height:1.8;margin-bottom:2rem}
+.section-body{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.85rem,1.1vw,1rem);line-height:2;color:rgba(255,255,255,0.55);letter-spacing:0.05em}
+.section-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);margin-top:120px}
+
+/* ===== Scroll animations ===== */
+.fade-up{opacity:0;transform:translateY(40px);transition:opacity 1s cubic-bezier(0.22,1,0.36,1),transform 1s cubic-bezier(0.22,1,0.36,1)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.fade-in{opacity:0;transition:opacity 0.8s ease}
+.fade-in.visible{opacity:1}
+.scale-in{opacity:0;transform:scale(0.92);transition:opacity 1s cubic-bezier(0.22,1,0.36,1),transform 1s cubic-bezier(0.22,1,0.36,1)}
+.scale-in.visible{opacity:1;transform:scale(1)}
+.line-reveal{width:0;transition:width 1.2s cubic-bezier(0.22,1,0.36,1)}
+.line-reveal.visible{width:100%}
+
+/* ===== Purpose ===== */
+#purpose{padding:160px 0 120px}
+#purpose .purpose-block{max-width:780px;margin:0 auto}
+#purpose .purpose-line{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(0.95rem,1.6vw,1.25rem);color:rgba(255,255,255,0.75);letter-spacing:0.08em;line-height:2.4;margin-bottom:0}
+#purpose .purpose-spacer{height:2.5rem}
+#purpose .purpose-highlight-wrap{position:relative;padding:2rem 0 2rem 2em;margin:0.5rem 0}
+#purpose .purpose-highlight-bar{position:absolute;left:0;top:0;width:2px;height:0;background:linear-gradient(180deg,#ffaa44,#ff8844);transition:height 1.2s cubic-bezier(0.22,1,0.36,1) 0.3s}
+#purpose .purpose-highlight-wrap.visible .purpose-highlight-bar{height:100%}
+#purpose .purpose-highlight{font-family:'Noto Serif JP',serif;font-weight:700;font-size:clamp(1.05rem,1.8vw,1.35rem);color:rgba(255,255,255,0.95);letter-spacing:0.1em;line-height:2.2}
+#purpose .purpose-closing{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(0.95rem,1.6vw,1.25rem);color:rgba(255,255,255,0.75);letter-spacing:0.08em;line-height:2.4}
+
+/* ===== What We Do ===== */
+.whatwedo-cols{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:start;margin-top:3rem}
+.whatwedo-col{padding:40px;border:1px solid rgba(255,255,255,0.05);border-radius:16px;background:rgba(10,10,10,0.3);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:border-color 0.5s,background 0.5s}
+.whatwedo-col:hover{border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.03)}
+.whatwedo-icon{width:80px;height:80px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-family:'Noto Sans JP',sans-serif;font-weight:700;font-size:0.85rem;color:rgba(255,255,255,0.6);letter-spacing:0.1em;position:relative;overflow:hidden;transition:border-color 0.5s,color 0.5s}
+.whatwedo-icon::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(255,170,68,0.08) 0%,transparent 70%);opacity:0;transition:opacity 0.5s}
+.whatwedo-col:hover .whatwedo-icon{border-color:rgba(255,170,68,0.3);color:rgba(255,170,68,0.9)}
+.whatwedo-col:hover .whatwedo-icon::after{opacity:1}
+.whatwedo-col-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1rem,1.5vw,1.3rem);color:rgba(255,255,255,0.9);letter-spacing:0.12em;margin-bottom:1rem}
+.whatwedo-cross{display:flex;align-items:center;justify-content:center;font-family:'Noto Serif JP',serif;font-size:2rem;color:rgba(255,255,255,0.08);padding:0 24px;padding-top:80px;transition:color 0.5s}
+.slide-left{opacity:0;transform:translateX(-50px);transition:opacity 1s cubic-bezier(0.22,1,0.36,1),transform 1s cubic-bezier(0.22,1,0.36,1)}
+.slide-left.visible{opacity:1;transform:translateX(0)}
+.slide-right{opacity:0;transform:translateX(50px);transition:opacity 1s cubic-bezier(0.22,1,0.36,1),transform 1s cubic-bezier(0.22,1,0.36,1)}
+.slide-right.visible{opacity:1;transform:translateX(0)}
+
+/* ===== Services ===== */
+.services-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:3rem}
+.service-card{border:1px solid rgba(255,255,255,0.06);background:rgba(10,10,10,0.3);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:44px;border-radius:16px;transition:border-color 0.5s,background 0.5s,transform 0.5s,box-shadow 0.5s;position:relative;overflow:hidden}
+.service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,170,68,0.3),transparent);opacity:0;transition:opacity 0.5s}
+.service-card:hover{border-color:rgba(255,170,68,0.2);background:rgba(255,255,255,0.04);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.service-card:hover::before{opacity:1}
+.service-card-num{font-family:'Noto Sans JP',sans-serif;font-weight:700;font-size:0.7rem;color:rgba(255,170,68,0.35);letter-spacing:0.15em;margin-bottom:1.2rem}
+.service-card-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1rem,1.3vw,1.15rem);color:rgba(255,255,255,0.9);letter-spacing:0.1em;margin-bottom:1rem}
+.service-card-desc{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.8rem,0.95vw,0.9rem);line-height:1.9;color:rgba(255,255,255,0.5);letter-spacing:0.04em}
+
+/* ===== Products ===== */
+.products-wrapper{position:relative;margin-top:3rem}
+.products-scroll{display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:20px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent}
+.products-scroll::-webkit-scrollbar{height:4px}
+.products-scroll::-webkit-scrollbar-track{background:transparent}
+.products-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
+.product-card{flex:0 0 360px;scroll-snap-align:start;border:1px solid rgba(255,255,255,0.06);background:rgba(10,10,10,0.3);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:16px;padding:48px 40px;position:relative;overflow:hidden;transition:border-color 0.5s,background 0.5s,transform 0.5s,box-shadow 0.5s}
+.product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#4a90d9,#ffaa44);opacity:0.4;transition:opacity 0.5s}
+.product-card:hover{border-color:rgba(255,170,68,0.2);background:rgba(255,255,255,0.04);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.product-card:hover::before{opacity:0.8}
+.product-card-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1rem,1.3vw,1.15rem);color:rgba(255,255,255,0.9);letter-spacing:0.1em;margin-bottom:1rem}
+.product-card-desc{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.8rem,0.95vw,0.9rem);line-height:1.9;color:rgba(255,255,255,0.5);letter-spacing:0.04em}
+.scroll-hint{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border:1px solid rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(10,10,10,0.8);transition:border-color 0.3s;z-index:2}
+.scroll-hint:hover{border-color:rgba(255,170,68,0.4)}
+.scroll-hint svg{width:14px;height:14px;stroke:rgba(255,255,255,0.5);fill:none;stroke-width:2}
+.scroll-hint-left{left:-18px}
+.scroll-hint-right{right:-18px}
+
+/* ===== Numbers ===== */
+.numbers-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-top:4rem;text-align:center}
+.number-item{padding:40px 20px;border-radius:16px;background:rgba(10,10,10,0.3);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.04);transition:border-color 0.5s,transform 0.5s}
+.number-item:hover{border-color:rgba(255,170,68,0.15);transform:translateY(-3px)}
+.number-item-value{font-family:'Noto Serif JP',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;background:linear-gradient(135deg,#ffaa44,#ff8844,#ffcc66);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.05em;line-height:1.2}
+.number-item-label{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.7rem,0.9vw,0.85rem);color:rgba(255,255,255,0.4);letter-spacing:0.1em;margin-top:1rem}
+.number-item-line{width:24px;height:1px;background:linear-gradient(90deg,#ffaa44,transparent);margin:0.8rem auto 0;opacity:0;transition:opacity 0.8s 0.5s,width 0.8s 0.5s}
+.number-item.visible .number-item-line{opacity:1;width:40px}
+
+/* ===== Message ===== */
+#message{padding:160px 0;position:relative}
+#message::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,170,68,0.03) 0%,transparent 70%);pointer-events:none}
+#message .message-quote{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.1rem,1.8vw,1.5rem);color:rgba(255,255,255,0.85);letter-spacing:0.1em;line-height:2.4;max-width:720px;margin:0 auto;text-align:center;position:relative}
+#message .message-deco{width:40px;height:1px;background:linear-gradient(90deg,transparent,#ffaa44,transparent);margin:0 auto 3rem;opacity:0.5}
+#message .message-attr{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.85rem;color:rgba(255,255,255,0.3);letter-spacing:0.25em;text-align:center;margin-top:3rem}
+
+/* ===== Contact ===== */
+#contact{text-align:center;padding:160px 0}
+.contact-cta{display:inline-block;border:1px solid rgba(255,170,68,0.6);background:transparent;color:#ffaa44;padding:18px 56px;border-radius:8px;letter-spacing:0.2em;font-family:'Noto Sans JP',sans-serif;font-weight:400;font-size:0.9rem;cursor:pointer;transition:all 0.4s cubic-bezier(0.22,1,0.36,1);text-decoration:none;margin-top:2.5rem;position:relative;overflow:hidden}
+.contact-cta::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,170,68,0.1),transparent);transition:left 0.6s}
+.contact-cta:hover{background:rgba(255,170,68,0.95);color:#0a0a0a;border-color:#ffaa44;transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,170,68,0.15)}
+.contact-cta:hover::before{left:100%}
+.contact-email{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.8rem;color:rgba(255,255,255,0.25);letter-spacing:0.1em;margin-top:2rem}
+
+/* ===== Footer ===== */
+footer{border-top:1px solid rgba(255,255,255,0.06);padding:40px 0;text-align:center;position:relative;z-index:4}
+footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem;color:rgba(255,255,255,0.25);letter-spacing:0.1em}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .section{padding:60px 0}
+  .section-inner{padding:0 24px}
+  .whatwedo-cols{grid-template-columns:1fr;gap:0}
+  .whatwedo-cross{padding:10px 0;font-size:1.2rem}
+  .whatwedo-col{padding:24px 0}
+  .services-grid{grid-template-columns:1fr}
+  .product-card{flex:0 0 300px}
+  .numbers-grid{grid-template-columns:1fr 1fr;gap:30px}
+  .scroll-hint{display:none}
+  #message{padding:60px 0}
+  .section-divider{margin-top:60px}
+}
+</style>
+</head>
+<body>
+
+<!-- Hero area (200vh scroll space, fixed canvas) -->
+<div id="hero-scroll-space"></div>
+<div id="canvas-container"><canvas id="c"></canvas></div><div id="glow-overlay"></div>
+<div class="hero-text"><h1 id="mainText"></h1><p class="subtitle" id="subtitle">STORY CAREER</p></div>
+<div id="progress-bar"></div><div class="scroll-indicator" id="scrollIndicator"><span>SCROLL</span><div class="scroll-arrow"></div></div>
+
+<!-- Hero canvas serves as ambient bg when scrolled past -->
+
+<!-- Content sections -->
+<div id="content">
+
+  <!-- Purpose -->
+  <section id="purpose" class="section">
+    <!-- bg handled by ambient canvas -->
+    <div class="section-inner">
+      <div class="purpose-block">
+        <p class="purpose-line fade-up">AIが台頭したことにより、より人らしい価値が発揮できるようになりました。</p>
+        <p class="purpose-line fade-up" style="transition-delay:0.12s">むしろ、人らしい価値発揮をすることが企業成長において不可欠です。</p>
+        <p class="purpose-line fade-up" style="transition-delay:0.24s">しかし現状、AI化＝人的リソースの削減となっており、</p>
+        <p class="purpose-line fade-up" style="transition-delay:0.36s">人の本当の価値が理解されていません。</p>
+        <div class="purpose-spacer"></div>
+        <p class="purpose-line fade-up" style="transition-delay:0.48s">我々は、</p>
+        <div class="purpose-highlight-wrap fade-up" style="transition-delay:0.60s">
+          <div class="purpose-highlight-bar"></div>
+          <p class="purpose-highlight">「AIに向いている業務は何か、人にしかできない業務は何か」</p>
+        </div>
+        <div class="purpose-spacer"></div>
+        <p class="purpose-closing fade-up" style="transition-delay:0.72s">という問いに向き合い、そこで働く人の可能性を再定義し、</p>
+        <p class="purpose-closing fade-up" style="transition-delay:0.84s">企業成長の伴走を担うとともに、個人の働きがいを最大化します。</p>
+      </div>
+      <div class="section-divider"></div>
+    </div>
+  </section>
+
+  <!-- What We Do -->
+  <section id="whatwedo" class="section">
+    <!-- bg handled by ambient canvas -->
+    <div class="section-inner">
+      <p class="section-label fade-up">HR &times; AX</p>
+      <h2 class="section-heading fade-up" style="transition-delay:0.15s">人と事業の可能性を、両面から引き出す。</h2>
+      <div class="whatwedo-cols">
+        <div class="whatwedo-col slide-left">
+          <div class="whatwedo-icon">HR</div>
+          <h3 class="whatwedo-col-title">HR Consulting</h3>
+          <p class="section-body">採用戦略の設計からRPO運用まで。企業の"人"に関するあらゆる課題に伴走します。</p>
+        </div>
+        <div class="whatwedo-cross fade-in">&times;</div>
+        <div class="whatwedo-col slide-right">
+          <div class="whatwedo-icon">AX</div>
+          <h3 class="whatwedo-col-title">AX Consulting</h3>
+          <p class="section-body">業務のAI化を戦略から実装まで。人の価値が最大化される組織へ変革を支援します。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="section">
+    <!-- bg handled by ambient canvas -->
+    <div class="section-inner">
+      <p class="section-label fade-up">Services</p>
+      <h2 class="section-heading fade-up" style="transition-delay:0.15s">事業を支えるサービス</h2>
+      <div class="services-grid">
+        <div class="service-card scale-in" style="transition-delay:0.1s">
+          <p class="service-card-num">01</p>
+          <h3 class="service-card-title">RPO（採用代行）</h3>
+          <p class="service-card-desc">採用活動の設計・運用・改善をワンストップで。</p>
+        </div>
+        <div class="service-card scale-in" style="transition-delay:0.2s">
+          <p class="service-card-num">02</p>
+          <h3 class="service-card-title">AXコンサルティング</h3>
+          <p class="service-card-desc">AI導入の戦略策定から業務実装まで伴走。</p>
+        </div>
+        <div class="service-card scale-in" style="transition-delay:0.3s">
+          <p class="service-card-num">03</p>
+          <h3 class="service-card-title">採用マーケティング</h3>
+          <p class="service-card-desc">データドリブンな母集団形成と候補者体験の設計。</p>
+        </div>
+        <div class="service-card scale-in" style="transition-delay:0.4s">
+          <p class="service-card-num">04</p>
+          <h3 class="service-card-title">プロダクト開発</h3>
+          <p class="service-card-desc">HR&times;AIの独自プロダクトを企画・開発・運用。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section id="products" class="section">
+    <!-- bg handled by ambient canvas -->
+    <div class="section-inner">
+      <p class="section-label fade-up">Products</p>
+      <h2 class="section-heading fade-up" style="transition-delay:0.15s">プロダクト</h2>
+      <div class="products-wrapper fade-up" style="transition-delay:0.25s">
+        <div class="products-scroll" id="productsScroll">
+          <div class="product-card">
+            <h3 class="product-card-title">AI採用社長</h3>
+            <p class="product-card-desc">採用プロセスをAIが一気通貫で支援。候補者データの分析から選考まで。</p>
+          </div>
+          <div class="product-card">
+            <h3 class="product-card-title">採用マーケティングHub</h3>
+            <p class="product-card-desc">採用データを一元管理し、チャネル横断で最適化。</p>
+          </div>
+          <div class="product-card">
+            <h3 class="product-card-title">AIマーケ部長</h3>
+            <p class="product-card-desc">AIが企業のマーケティング業務を自動化。戦略立案から実行まで。</p>
+          </div>
+        </div>
+        <button class="scroll-hint scroll-hint-left" id="scrollLeft" aria-label="前へスクロール"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="scroll-hint scroll-hint-right" id="scrollRight" aria-label="次へスクロール"><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Numbers -->
+  <section id="numbers" class="section">
+    <!-- bg handled by ambient canvas -->
+    <div class="section-inner">
+      <p class="section-label fade-up">Track Record</p>
+      <div class="numbers-grid">
+        <div class="number-item fade-up" style="transition-delay:0.1s">
+          <div class="number-item-value" data-target="50" data-suffix="+">0</div>
+          <p class="number-item-label">支援企業数</p><div class="number-item-line"></div>
+        </div>
+        <div class="number-item fade-up" style="transition-delay:0.2s">
+          <div class="number-item-value" data-target="200" data-suffix="%">0</div>
+          <p class="number-item-label">平均採用効率改善</p><div class="number-item-line"></div>
+        </div>
+        <div class="number-item fade-up" style="transition-delay:0.3s">
+          <div class="number-item-value" data-target="30" data-suffix="+">0</div>
+          <p class="number-item-label">導入プロダクト数</p><div class="number-item-line"></div>
+        </div>
+        <div class="number-item fade-up" style="transition-delay:0.4s">
+          <div class="number-item-value" data-target="98" data-suffix="%">0</div>
+          <p class="number-item-label">継続率</p><div class="number-item-line"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section">
+    <!-- bg handled by ambient canvas -->
+    <div class="section-inner">
+      <p class="section-label fade-up" style="text-align:center">Contact</p>
+      <h2 class="section-heading fade-up" style="transition-delay:0.15s;text-align:center">採用・組織のAX化についてのご相談はこちらから。</h2>
+      <div class="fade-up" style="transition-delay:0.3s;text-align:center">
+        <a href="mailto:info@storycareer.jp" class="contact-cta">お問い合わせ</a>
+        <p class="contact-email">info@storycareer.jp</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>&copy; 2026 STORY CAREER Inc.</p>
+</footer>
+
+<script>
+// ===== Hero animation (verbatim from top-hero.html, scroll calc modified) =====
+(function(){
+  'use strict';
+  const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+  const N_BEFORE=500;
+  const N_TOTAL=2300;
+  let W,H;
+  let particles=[];
+  let rectPos=[],netPos=[],textPos=[];
+  let mouse={x:-9999,y:-9999},scrollProgress=0,scrollTarget=0,hasCompletedOnce=false;
+  let activeCount=N_BEFORE;
+  let parentMap=[];
+
+  const textStr='\u4eba\u306e\u53ef\u80fd\u6027\u3092\u518d\u5b9a\u7fa9\u3059\u308b\u3002';
+  const mainTextEl=document.getElementById('mainText'),subtitleEl=document.getElementById('subtitle'),progressBar=document.getElementById('progress-bar'),scrollIndicator=document.getElementById('scrollIndicator'),glowOverlay=document.getElementById('glow-overlay');
+  mainTextEl.innerHTML=textStr.split('').map(ch=>`<span class="char">${ch}</span>`).join('');
+  const charEls=mainTextEl.querySelectorAll('.char');
+
+  // Japanese text particle system (for dissolve effect)
+  const JP_COUNT=1000;
+  let jpParticles=[],jpTextPositions=[];
+
+  function genJpText(){
+    jpTextPositions=[];
+    const offC=document.createElement('canvas'),offX=offC.getContext('2d');
+    const fs=Math.min(W*0.038,36);// match CSS clamp(1.5rem,3.8vw,3rem)
+    offC.width=W;offC.height=H;
+    offX.fillStyle='white';
+    offX.font=`300 ${fs}px "Noto Serif JP", serif`;
+    offX.textAlign='center';offX.textBaseline='middle';
+    try{offX.letterSpacing=`${fs*0.15}px`}catch(e){}
+    offX.fillText(textStr,W/2,H/2);
+    const id=offX.getImageData(0,0,W,H).data;
+    const cands=[];
+    for(let y=0;y<H;y+=1)for(let x=0;x<W;x+=1){
+      if(id[(y*W+x)*4+3]>80)cands.push({x,y});
+    }
+    cands.sort(()=>Math.random()-0.5);
+    // Outward scatter with equal distribution across all directions
+    // Assign each particle a sector: 0=right, 1=up, 2=left, 3=down (roughly equal)
+    for(let i=0;i<JP_COUNT;i++){
+      const c=i<cands.length?cands[i]:{x:W/2+(Math.random()-0.5)*200,y:H/2+(Math.random()-0.5)*30};
+      // Force equal distribution: cycle through 4 quadrants
+      const sector=i%4;// 0=right, 1=up, 2=left, 3=down
+      let baseAngle;
+      switch(sector){
+        case 0: baseAngle=(Math.random()-0.5)*1.2; break;// right: -35° to +35°
+        case 1: baseAngle=-Math.PI/2+(Math.random()-0.5)*1.2; break;// up
+        case 2: baseAngle=Math.PI+(Math.random()-0.5)*1.2; break;// left
+        case 3: baseAngle=Math.PI/2+(Math.random()-0.5)*1.2; break;// down
+      }
+      const speed=220+Math.random()*350;
+      const dirX=Math.cos(baseAngle),dirY=Math.sin(baseAngle);
+      const perpX=-dirY,perpY=dirX;
+      const curveBend=(Math.random()-0.5)*150;
+      jpTextPositions.push({
+        x:c.x,y:c.y,
+        endX:c.x+dirX*speed+(Math.random()-0.5)*60,
+        endY:c.y+dirY*speed+(Math.random()-0.5)*60,
+        cpX:c.x+dirX*speed*0.35+perpX*curveBend,
+        cpY:c.y+dirY*speed*0.35+perpY*curveBend,
+        wobbleAmpX:18+Math.random()*30,
+        wobbleAmpY:12+Math.random()*25,
+        wobbleSpeed:1.2+Math.random()*2.0,
+        wobblePhase:Math.random()*Math.PI*2,
+      });
+    }
+  }
+
+  function initJpParticles(){
+    jpParticles=[];
+    for(let i=0;i<JP_COUNT;i++){
+      jpParticles.push({
+        x:0,y:0,
+        radius:1.0+Math.random()*1.8,// same as Before particles
+        glowRadius:6+Math.random()*12,
+        alpha:0,
+        colorT:Math.random(),
+      });
+    }
+  }
+
+  function resize(){
+    W=window.innerWidth;H=window.innerHeight;
+    canvas.width=W*devicePixelRatio;canvas.height=H*devicePixelRatio;
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    genRect();genNet();genTextShape();genJpText();genAmbientPositions();
+    if(particles.length===0){initP();initJpParticles()}
+  }
+
+  function genRect(){
+    rectPos=[];
+    const cols=25,rows=20,tw=Math.min(W*0.45,420),th=Math.min(H*0.40,320);
+    const cx=W/2,cy=H/2,sx=cx-tw/2,sy=cy-th/2,cw=tw/(cols-1),ch_=th/(rows-1);
+    const p=[];
+    for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)p.push({x:sx+c*cw+(Math.random()-0.5)*2,y:sy+r*ch_+(Math.random()-0.5)*2});
+    while(p.length<N_BEFORE){const s=p[Math.floor(Math.random()*p.length)];p.push({x:s.x+(Math.random()-0.5)*4,y:s.y+(Math.random()-0.5)*4})}
+    p.sort(()=>Math.random()-0.5);
+    rectPos=p.slice(0,N_BEFORE);
+  }
+
+  function genNet(){
+    netPos=[];
+    const m=40,cs=Math.sqrt((W-m*2)*(H-m*2)/N_BEFORE)*0.85;
+    const cols=Math.ceil((W-m*2)/cs),rows=Math.ceil((H-m*2)/cs);
+    const grid=new Array(cols*rows).fill(-1),al=[],pts=[],k=30;
+    function gi(x,y){const gx=Math.floor((x-m)/cs),gy=Math.floor((y-m)/cs);if(gx<0||gx>=cols||gy<0||gy>=rows)return-1;return gy*cols+gx}
+    function tc(x,y){const gx=Math.floor((x-m)/cs),gy=Math.floor((y-m)/cs),md=cs*0.7;for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const nx=gx+dx,ny=gy+dy;if(nx<0||nx>=cols||ny<0||ny>=rows)continue;const i=grid[ny*cols+nx];if(i===-1)continue;const p=pts[i],ddx=p.x-x,ddy=p.y-y;if(ddx*ddx+ddy*ddy<md*md)return true}return false}
+    const sx=W/2+(Math.random()-0.5)*100,sy=H/2+(Math.random()-0.5)*100;
+    pts.push({x:sx,y:sy});al.push(0);const si=gi(sx,sy);if(si>=0)grid[si]=0;
+    while(al.length>0&&pts.length<N_BEFORE*2){const ai=Math.floor(Math.random()*al.length),base=pts[al[ai]];let found=false;for(let a=0;a<k;a++){const ang=Math.random()*Math.PI*2,r=cs*(0.7+Math.random()*0.7),nx=base.x+Math.cos(ang)*r,ny=base.y+Math.sin(ang)*r;if(nx<m||nx>W-m||ny<m||ny>H-m)continue;if(tc(nx,ny))continue;const g=gi(nx,ny);if(g<0||grid[g]!==-1)continue;pts.push({x:nx,y:ny});grid[g]=pts.length-1;al.push(pts.length-1);found=true;break}if(!found)al.splice(ai,1)}
+    while(pts.length<N_BEFORE)pts.push({x:m+Math.random()*(W-m*2),y:m+Math.random()*(H-m*2)});
+    pts.sort(()=>Math.random()-0.5);
+    netPos=pts.slice(0,N_BEFORE);
+    compNetNbrs();
+  }
+
+  let netNbrs=[];
+  function compNetNbrs(){
+    netNbrs=[];const seen=new Set();
+    for(let i=0;i<N_BEFORE;i++){
+      const pi=netPos[i],d=[];
+      for(let j=0;j<N_BEFORE;j++){if(i===j)continue;const dx=pi.x-netPos[j].x,dy=pi.y-netPos[j].y;d.push({j,dist:Math.sqrt(dx*dx+dy*dy)})}
+      d.sort((a,b)=>a.dist-b.dist);
+      const c=2+(Math.random()<0.5?1:0);
+      for(let k=0;k<Math.min(c,d.length);k++){const j=d[k].j;if(i<j){const key=i+','+j;if(!seen.has(key)){seen.add(key);netNbrs.push({i,j})}}}
+    }
+  }
+
+  function genTextShape(){
+    textPos=[];
+    const offCanvas=document.createElement('canvas');
+    const offCtx=offCanvas.getContext('2d');
+    const fontSize=Math.min(W*0.13,130);
+    offCanvas.width=W;offCanvas.height=H;
+    offCtx.fillStyle='white';
+    offCtx.font=`700 ${fontSize}px "Noto Serif JP", Georgia, serif`;
+    offCtx.textAlign='center';offCtx.textBaseline='middle';
+    try{offCtx.letterSpacing='2px'}catch(e){}
+    offCtx.fillText('Potential',W/2,H/2);
+    const imageData=offCtx.getImageData(0,0,W,H);
+    const pixels=imageData.data;
+
+    function isTextPixel(x,y){
+      if(x<0||x>=W||y<0||y>=H)return false;
+      return pixels[(Math.floor(y)*W+Math.floor(x))*4+3]>80;
+    }
+    // Edge detection: is this pixel on the border of the text?
+    function isEdgePixel(x,y){
+      if(!isTextPixel(x,y))return false;
+      // Check 4 neighbors — if any neighbor is NOT text, this is an edge
+      return !isTextPixel(x-1,y)||!isTextPixel(x+1,y)||!isTextPixel(x,y-1)||!isTextPixel(x,y+1);
+    }
+
+    let minX=W,maxX=0,minY=H,maxY=0;
+    for(let y=0;y<H;y+=2){for(let x=0;x<W;x+=2){
+      if(pixels[(y*W+x)*4+3]>80){if(x<minX)minX=x;if(x>maxX)maxX=x;if(y<minY)minY=y;if(y>maxY)maxY=y}
+    }}
+
+    // Collect edge pixels and interior pixels separately
+    const edgePixels=[],interiorPixels=[];
+    for(let y=minY;y<=maxY;y+=1){for(let x=minX;x<=maxX;x+=1){
+      if(!isTextPixel(x,y))continue;
+      if(isEdgePixel(x,y))edgePixels.push({x,y});
+      else interiorPixels.push({x,y});
+    }}
+    edgePixels.sort(()=>Math.random()-0.5);
+    interiorPixels.sort(()=>Math.random()-0.5);
+
+    // Allocate: 50% edge, 50% interior — edge particles define the outline
+    const edgeCount=Math.floor(N_TOTAL*0.3);// 30% edge, 70% interior fill
+    const interiorCount=N_TOTAL-edgeCount;
+    const points=[];
+
+    // Edge particles: sample with minimum spacing for clean outline
+    const edgeSpacing=2;
+    let ei=0;
+    for(let i=0;i<edgeCount&&ei<edgePixels.length;ei++){
+      const ep=edgePixels[ei];
+      // Check not too close to existing edge points
+      let ok=true;
+      for(let j=Math.max(0,points.length-50);j<points.length;j++){
+        const dx=points[j].x-ep.x,dy=points[j].y-ep.y;
+        if(dx*dx+dy*dy<edgeSpacing*edgeSpacing){ok=false;break}
+      }
+      if(ok){points.push({x:ep.x,y:ep.y,isEdge:true});i++}
+    }
+
+    // Interior particles: fill with Poisson disk
+    const minDist=Math.sqrt((maxX-minX)*(maxY-minY)/(interiorCount*4));
+    let ii=0;
+    for(let i=0;i<interiorCount&&ii<interiorPixels.length;ii++){
+      const ip=interiorPixels[ii];
+      let ok=true;
+      for(let j=Math.max(0,points.length-30);j<points.length;j++){
+        const dx=points[j].x-ip.x,dy=points[j].y-ip.y;
+        if(dx*dx+dy*dy<minDist*minDist*0.25){ok=false;break}// tighter packing
+      }
+      if(ok){points.push({x:ip.x,y:ip.y,isEdge:false});i++}
+    }
+
+    // Extra pass: densify bottom half of text (below midY)
+    const midY=(minY+maxY)/2;
+    const bottomPixels=interiorPixels.filter(p=>p.y>=midY);
+    bottomPixels.sort(()=>Math.random()-0.5);
+    const extraBottom=Math.floor(N_TOTAL*0.15);// 15% extra for bottom
+    let bi=0;
+    for(let i=0;i<extraBottom&&bi<bottomPixels.length;bi++){
+      const bp=bottomPixels[bi];
+      points.push({x:bp.x+(Math.random()-0.5)*1.5,y:bp.y+(Math.random()-0.5)*1.5,isEdge:false});
+      i++;
+    }
+
+    // Fill remaining if needed
+    while(points.length<N_TOTAL+extraBottom){
+      const src=Math.random()<0.3?edgePixels:interiorPixels;
+      if(src.length>0){
+        const p=src[Math.floor(Math.random()*src.length)];
+        points.push({x:p.x+(Math.random()-0.5)*2,y:p.y+(Math.random()-0.5)*2,isEdge:false});
+      }else break;
+    }
+
+    points.sort(()=>Math.random()-0.5);
+
+    parentMap=[];
+    for(let i=0;i<N_TOTAL;i++){
+      const p=i<points.length?points[i]:{x:W/2+(Math.random()-0.5)*200,y:H/2+(Math.random()-0.5)*40,isEdge:false};
+      const edge=p.isEdge||false;
+      textPos.push({
+        x:p.x+(Math.random()-0.5)*(edge?0.5:1.0),// edge: less jitter
+        y:p.y+(Math.random()-0.5)*(edge?0.5:1.0),
+        floatSpeedX:0.15+Math.random()*0.4,
+        floatSpeedY:0.12+Math.random()*0.35,
+        floatPhaseX:Math.random()*Math.PI*2,
+        floatPhaseY:Math.random()*Math.PI*2,
+        floatAmpX:edge?0.8+Math.random()*1.5:1.5+Math.random()*3.5,// edge: less drift
+        floatAmpY:edge?0.5+Math.random()*1.0:1.0+Math.random()*2.5,
+        sizeMul:edge?0.35+Math.random()*0.3:0.3+Math.random()*0.5,// edge: slightly brighter
+        isEdge:edge
+      });
+      if(i>=N_BEFORE){
+        let bestDist=Infinity,bestIdx=0;
+        const tp=textPos[i];
+        for(let j=0;j<Math.min(N_BEFORE,textPos.length);j++){
+          const dx=tp.x-textPos[j].x,dy=tp.y-textPos[j].y;
+          const d=dx*dx+dy*dy;
+          if(d<bestDist){bestDist=d;bestIdx=j}
+        }
+        parentMap[i]=bestIdx;
+      }
+    }
+  }
+
+  function initP(){
+    particles=[];
+    for(let i=0;i<N_TOTAL;i++){
+      const t=i/N_TOTAL;
+      const isOriginal=i<N_BEFORE;
+      particles.push({
+        x:isOriginal?rectPos[i].x:0,
+        y:isOriginal?rectPos[i].y:0,
+        targetX:0,targetY:0,
+        beforeRadius:1.0+Math.random()*1.8,
+        beforeGlowRadius:6+Math.random()*12,
+        afterRadius:0.6+Math.random()*1.0,
+        afterGlowRadius:2.5+Math.random()*4,
+        baseAlpha:0.5+Math.random()*0.5,
+        radius:0,glowRadius:0,alpha:0,
+        colorT:t,
+        driftPhase:Math.random()*Math.PI*2,
+        driftSpeed:0.15+Math.random()*0.3,
+        born:isOriginal,
+        bornAlpha:isOriginal?1:0,
+      });
+    }
+  }
+
+  function lerpColor(t){return{r:Math.round(74+t*(255-74)),g:Math.round(144+t*(170-144)),b:Math.round(217+t*(68-217))}}
+  function ss(t){return t*t*(3-2*t)}
+
+  // Scroll: hero progress (0-1 within 200vh) + pastHeroT (how far past hero)
+  let pastHeroT=0;// 0=still in hero, 0→1 over next 300px after hero, 1=fully ambient
+  let ambientPositions=[];// random positions for ambient drift
+  function genAmbientPositions(){
+    ambientPositions=[];
+    for(let i=0;i<N_TOTAL;i++){
+      ambientPositions.push({
+        x:Math.random()*W,y:Math.random()*H,
+        vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.2,
+        phase:Math.random()*Math.PI*2,speed:0.15+Math.random()*0.4
+      });
+    }
+  }
+  function onScroll(){
+    const heroMax=window.innerHeight*2;
+    scrollTarget=heroMax>0?Math.min(1,window.scrollY/heroMax):0;
+    // Start dispersing when 80% through hero, fully ambient by 200px past hero
+    const disperseStart=heroMax*0.80;
+    const disperseEnd=heroMax+200;
+    pastHeroT=Math.min(1,Math.max(0,(window.scrollY-disperseStart)/(disperseEnd-disperseStart)));
+  }
+  function updateScroll(){
+    if(hasCompletedOnce){
+      // After first playthrough, follow directly
+      scrollProgress=scrollTarget;
+    }else{
+      // First time: smooth lerp at fixed rate (max ~0.8% per frame)
+      const maxStep=0.008;
+      const diff=scrollTarget-scrollProgress;
+      if(Math.abs(diff)<0.001){scrollProgress=scrollTarget}
+      else{scrollProgress+=Math.sign(diff)*Math.min(Math.abs(diff),maxStep)}
+      if(scrollProgress>=0.98)hasCompletedOnce=true;
+    }
+    progressBar.style.width=(scrollProgress*100)+'%';
+    if(scrollProgress>0.08)scrollIndicator.classList.add('hidden');else scrollIndicator.classList.remove('hidden');
+  }
+  function onMM(e){mouse.x=e.clientX;mouse.y=e.clientY}function onML(){mouse.x=-9999;mouse.y=-9999}
+  function onTM(e){if(e.touches.length>0){mouse.x=e.touches[0].clientX;mouse.y=e.touches[0].clientY}}function onTE(){mouse.x=-9999;mouse.y=-9999}
+
+  function animate(){
+    requestAnimationFrame(animate);updateScroll();ctx.clearRect(0,0,W,H);const now=performance.now();
+    let phase,phaseT=0;
+    if(scrollProgress<0.08)phase='rect';
+    else if(scrollProgress<0.20){phase='scatter';phaseT=(scrollProgress-0.08)/0.12}
+    else if(scrollProgress<0.35){phase='network';phaseT=(scrollProgress-0.20)/0.15}
+    else if(scrollProgress<0.50){phase='reform';phaseT=(scrollProgress-0.35)/0.15}
+    else{phase='organic';phaseT=1}
+
+    let targetActive=N_BEFORE;
+    if(phase==='reform'){targetActive=Math.floor(N_BEFORE+(N_TOTAL-N_BEFORE)*ss(phaseT))}
+    else if(phase==='organic'){targetActive=N_TOTAL}
+
+    if(targetActive>activeCount){
+      for(let i=activeCount;i<targetActive;i++){
+        if(i<N_TOTAL&&!particles[i].born){
+          particles[i].born=true;
+          const parentIdx=parentMap[i]||0;
+          if(parentIdx<particles.length){particles[i].x=particles[parentIdx].x;particles[i].y=particles[parentIdx].y}
+        }
+      }
+      activeCount=targetActive;
+    }
+    if(targetActive<activeCount){
+      for(let i=targetActive;i<activeCount;i++){if(i<N_TOTAL){particles[i].born=false;particles[i].bornAlpha=0}}
+      activeCount=targetActive;
+    }
+
+    let sizeT=0;
+    if(phase==='reform')sizeT=ss(phaseT);
+    else if(phase==='organic')sizeT=1;
+
+    let vT=0;
+    if(phase==='scatter')vT=ss(phaseT)*0.3;
+    else if(phase==='network')vT=0.3+ss(phaseT)*0.2;
+    else if(phase==='reform')vT=0.5+ss(phaseT)*0.5;
+    else if(phase==='organic')vT=1;
+
+    let lineFade=phase==='scatter'||phase==='network'?1:phase==='reform'?1-ss(phaseT):0;
+    const time=now*0.001;
+
+    for(let i=0;i<N_TOTAL;i++){
+      const pt=particles[i];
+      if(!pt.born){pt.bornAlpha=0;continue}
+      if(pt.bornAlpha<1)pt.bornAlpha=Math.min(1,pt.bornAlpha+0.03);
+      const tp=textPos[i];
+      const isOriginal=i<N_BEFORE;
+      const dx=pt.x-mouse.x,dy=pt.y-mouse.y,dist=Math.sqrt(dx*dx+dy*dy);
+      let cpx=0,cpy=0;
+      if(dist<120&&dist>0){const f=(1-dist/120)*0.6;cpx=(dx/dist)*f*30;cpy=(dy/dist)*f*30}
+
+      // Ambient mode: when scrolled past hero, particles scatter to ambient positions
+      const isAmbient=pastHeroT>0;
+      const ambT=ss(pastHeroT);// eased 0→1
+
+      if(isAmbient){
+        // Blend from text position to ambient drift
+        const ap=ambientPositions[i];
+        // Ambient: slow organic floating
+        ap.x+=ap.vx+Math.sin(time*ap.speed+ap.phase)*0.2;
+        ap.y+=ap.vy+Math.cos(time*ap.speed*0.7+ap.phase)*0.15;
+        if(ap.x<-30)ap.x=W+30;if(ap.x>W+30)ap.x=-30;
+        if(ap.y<-30)ap.y=H+30;if(ap.y>H+30)ap.y=-30;
+        // Lerp between text pos and ambient pos
+        const textFx=Math.sin(time*tp.floatSpeedX+tp.floatPhaseX)*tp.floatAmpX;
+        const textFy=Math.cos(time*tp.floatSpeedY+tp.floatPhaseY)*tp.floatAmpY;
+        const txtX=tp.x+textFx,txtY=tp.y+textFy;
+        pt.targetX=txtX*(1-ambT)+ap.x*ambT;
+        pt.targetY=txtY*(1-ambT)+ap.y*ambT;
+        pt.x+=(pt.targetX-pt.x)*0.03+cpx;pt.y+=(pt.targetY-pt.y)*0.03+cpy;
+      }else if(isOriginal){
+        const rp=rectPos[i],np=netPos[i];
+        if(phase==='rect'){
+          pt.targetX=rp.x;pt.targetY=rp.y;
+          pt.x+=(pt.targetX-pt.x)*0.05+cpx;pt.y+=(pt.targetY-pt.y)*0.05+cpy;
+        }else if(phase==='scatter'){
+          const e=ss(phaseT),fx=rp.x-W/2,fy=rp.y-H/2;
+          pt.targetX=rp.x+fx*e*1.5+Math.sin(pt.driftPhase+now*0.001)*20*e;
+          pt.targetY=rp.y+fy*e*1.5+Math.cos(pt.driftPhase+now*0.0012)*20*e+e*e*40;
+          pt.x+=(pt.targetX-pt.x)*0.04+cpx;pt.y+=(pt.targetY-pt.y)*0.04+cpy;
+        }else if(phase==='network'){
+          pt.targetX=np.x+Math.cos(time*0.3+pt.driftPhase)*pt.driftSpeed*15;
+          pt.targetY=np.y+Math.sin(time*0.4+pt.driftPhase*1.3)*pt.driftSpeed*15;
+          pt.x+=(pt.targetX-pt.x)*0.05+cpx;pt.y+=(pt.targetY-pt.y)*0.05+cpy;
+        }else if(phase==='reform'){
+          pt.targetX=tp.x;pt.targetY=tp.y;
+          const pull=0.02+ss(phaseT)*0.06;
+          pt.x+=(pt.targetX-pt.x)*pull+cpx;pt.y+=(pt.targetY-pt.y)*pull+cpy;
+        }else{
+          const fx=Math.sin(time*tp.floatSpeedX+tp.floatPhaseX)*tp.floatAmpX;
+          const fy=Math.cos(time*tp.floatSpeedY+tp.floatPhaseY)*tp.floatAmpY;
+          pt.targetX=tp.x+fx;pt.targetY=tp.y+fy;
+          pt.x+=(pt.targetX-pt.x)*0.05+cpx;pt.y+=(pt.targetY-pt.y)*0.05+cpy;
+        }
+      }else{
+        if(isAmbient){/* handled above */}
+        else{
+          pt.targetX=tp.x;pt.targetY=tp.y;
+          if(phase==='organic'){
+            const fx=Math.sin(time*tp.floatSpeedX+tp.floatPhaseX)*tp.floatAmpX;
+            const fy=Math.cos(time*tp.floatSpeedY+tp.floatPhaseY)*tp.floatAmpY;
+            pt.targetX=tp.x+fx;pt.targetY=tp.y+fy;
+          }
+          const pull=phase==='reform'?0.03+ss(phaseT)*0.05:0.06;
+          pt.x+=(pt.targetX-pt.x)*pull+cpx;pt.y+=(pt.targetY-pt.y)*pull+cpy;
+        }
+      }
+
+      // Size: in ambient mode, grow to before size (warmer, more visible)
+      const ambientRadius=pt.beforeRadius*0.7;
+      const ambientGlow=pt.beforeGlowRadius*0.8;
+      const curRadius=pt.beforeRadius*(1-sizeT)+pt.afterRadius*sizeT;
+      const curGlow=pt.beforeGlowRadius*(1-sizeT)+pt.afterGlowRadius*sizeT;
+      const depthBlend=Math.max(0,(sizeT-0.3)/0.7);
+      const finalDepthMul=1*(1-depthBlend)+tp.sizeMul*depthBlend;
+      // Blend size toward ambient when past hero
+      const rFinal=curRadius*(1+vT*0.3)*finalDepthMul;
+      const gFinal=curGlow*(1+vT*0.5)*finalDepthMul;
+      pt.radius=rFinal*(1-ambT)+ambientRadius*ambT;
+      pt.glowRadius=gFinal*(1-ambT)+ambientGlow*ambT;
+      // Alpha: lower in ambient mode (subtle background)
+      const heroAlpha=pt.baseAlpha*(1+vT*0.4)*pt.bornAlpha;
+      const ambAlpha=0.12+Math.random()*0.01;// subtle
+      pt.alpha=Math.min(1,heroAlpha*(1-ambT*0.7));// fade to ~30% in ambient
+    }
+
+    // No connection lines — particles only
+
+    for(let i=0;i<N_TOTAL;i++){
+      const pt=particles[i];
+      if(!pt.born||pt.bornAlpha<0.01)continue;
+      const c=lerpColor(pt.colorT);
+      const tp=textPos[i];
+      // Edge particles: brighter core, tighter glow in organic phase (not in ambient)
+      const edgeBoost=(tp&&tp.isEdge&&phase==='organic'&&pastHeroT<0.5)?1:0;
+      const glowR=pt.glowRadius*(1-edgeBoost*0.3);// edge: tighter glow
+      const coreAlpha=pt.alpha*(1+edgeBoost*0.4);// edge: brighter
+      const gr=ctx.createRadialGradient(pt.x,pt.y,0,pt.x,pt.y,glowR);
+      gr.addColorStop(0,`rgba(${Math.min(255,c.r+40+edgeBoost*30)},${Math.min(255,c.g+30+edgeBoost*30)},${Math.min(255,c.b+20+edgeBoost*20)},${Math.min(1,coreAlpha*0.6)})`);
+      gr.addColorStop(0.3,`rgba(${c.r},${c.g},${c.b},${pt.alpha*0.2})`);
+      gr.addColorStop(1,`rgba(${c.r},${c.g},${c.b},0)`);
+      ctx.fillStyle=gr;ctx.beginPath();ctx.arc(pt.x,pt.y,glowR,0,Math.PI*2);ctx.fill();
+      const cw=vT*60+edgeBoost*40;
+      ctx.fillStyle=`rgba(${Math.min(255,c.r+cw)},${Math.min(255,c.g+cw)},${Math.min(255,c.b+cw)},${Math.min(1,coreAlpha)})`;
+      ctx.beginPath();ctx.arc(pt.x,pt.y,pt.radius,0,Math.PI*2);ctx.fill();
+    }
+
+    // --- Text phases ---
+    // 25-40%: CSS text appears char by char
+    // 40-42%: crossfade — CSS fades out, orange particle text fades in (same position)
+    // 42-52%: particle text scatters outward and fades
+    const textStart=0.25,textEnd=0.40,crossStart=0.40,crossEnd=0.42,dissolveEnd=0.52;
+
+    // CSS text
+    if(scrollProgress>=textStart&&scrollProgress<crossEnd){
+      const tp=Math.min(1,(scrollProgress-textStart)/(textEnd-textStart));
+      const show=Math.floor(tp*charEls.length);
+      for(let i=0;i<charEls.length;i++){if(i<show)charEls[i].classList.add('visible');else charEls[i].classList.remove('visible')}
+      // Crossfade: CSS fades out during 40-42%
+      if(scrollProgress>=crossStart){
+        const fadeT=(scrollProgress-crossStart)/(crossEnd-crossStart);
+        mainTextEl.style.opacity=1-fadeT;
+      }else{mainTextEl.style.opacity=1}
+    }else{
+      charEls.forEach(ch=>ch.classList.remove('visible'));
+      mainTextEl.style.opacity=0;
+    }
+    mainTextEl.classList.remove('bloomed');
+    subtitleEl.classList.remove('visible');
+    glowOverlay.style.opacity=0;
+
+    // Orange particle text: crossfade in 40-42%, scatter 42-52%
+    if(scrollProgress>=crossStart&&scrollProgress<dissolveEnd){
+      let particleAlpha,scatterT;
+      if(scrollProgress<crossEnd){
+        // Crossfade in: particles appear as CSS text fades
+        const fadeInT=(scrollProgress-crossStart)/(crossEnd-crossStart);
+        particleAlpha=fadeInT;
+        scatterT=0;// still in text formation
+      }else{
+        // Scatter phase
+        const dt=(scrollProgress-crossEnd)/(dissolveEnd-crossEnd);
+        scatterT=ss(dt);
+        particleAlpha=dt<0.6?1:1-(dt-0.6)/0.4;// hold full opacity 60%, then fade in last 40%
+      }
+
+      for(let i=0;i<JP_COUNT;i++){
+        const jp=jpParticles[i],pos=jpTextPositions[i];
+        // Quadratic bezier curve: start → control point → end
+        const t=scatterT;
+        const t1=1-t;
+        const bx=t1*t1*pos.x+2*t1*t*pos.cpX+t*t*pos.endX;
+        const by=t1*t1*pos.y+2*t1*t*pos.cpY+t*t*pos.endY;
+        // Add gentle wobble on top of the curve
+        const wobbleT=time*pos.wobbleSpeed+pos.wobblePhase;
+        const wx=Math.sin(wobbleT)*pos.wobbleAmpX*scatterT;
+        const wy=Math.cos(wobbleT*0.7)*pos.wobbleAmpY*scatterT;
+        let x=bx+wx,y=by+wy;
+        // Cursor push
+        const cdx=x-mouse.x,cdy=y-mouse.y,cdist=Math.sqrt(cdx*cdx+cdy*cdy);
+        if(cdist<120&&cdist>0){const cf=(1-cdist/120)*0.6;x+=cdx/cdist*cf*30;y+=cdy/cdist*cf*30}
+        const a=particleAlpha*0.9;
+        if(a<0.01)continue;
+        // Orange color palette
+        const oR=255,oG=Math.round(140+jp.colorT*60),oB=Math.round(30+jp.colorT*40);
+        // Glow grows as they float away (softer, more ethereal)
+        const glowR=jp.glowRadius*(1+scatterT*1.5);
+        // Particle also grows slightly (expanding, not shrinking)
+        const pR=jp.radius*(1+scatterT*0.6);
+        const gr=ctx.createRadialGradient(x,y,0,x,y,glowR);
+        gr.addColorStop(0,`rgba(${oR},${oG+30},${oB+20},${a*0.55})`);
+        gr.addColorStop(0.25,`rgba(${oR},${oG},${oB},${a*0.18})`);
+        gr.addColorStop(1,`rgba(${oR},${oG},${oB},0)`);
+        ctx.fillStyle=gr;ctx.beginPath();ctx.arc(x,y,glowR,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle=`rgba(${oR},${Math.min(255,oG+50)},${oB+30},${a*0.85})`;
+        ctx.beginPath();ctx.arc(x,y,pR,0,Math.PI*2);ctx.fill();
+      }
+    }
+  }
+
+  window.addEventListener('resize',resize);window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('mousemove',onMM);window.addEventListener('mouseleave',onML);
+  window.addEventListener('touchmove',onTM,{passive:true});window.addEventListener('touchend',onTE);
+  resize();onScroll();animate();
+})();
+
+// Ambient canvas removed — hero particles become ambient when scrolled past hero
+
+// ===== Scroll animations (IntersectionObserver) =====
+(function(){
+  'use strict';
+  // Element animations
+  const observer=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  },{threshold:0.15});
+  document.querySelectorAll('.fade-up,.fade-in,.slide-left,.slide-right,.scale-in').forEach(function(el){
+    observer.observe(el);
+  });
+
+})();
+
+// ===== Number count-up animation =====
+(function(){
+  'use strict';
+  const numberEls=document.querySelectorAll('.number-item-value[data-target]');
+  const observed=new Set();
+
+  const observer=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting&&!observed.has(entry.target)){
+        observed.add(entry.target);
+        const el=entry.target;
+        const target=parseInt(el.getAttribute('data-target'),10);
+        const suffix=el.getAttribute('data-suffix')||'';
+        const duration=1500;
+        const start=performance.now();
+
+        function tick(now){
+          const elapsed=now-start;
+          const progress=Math.min(elapsed/duration,1);
+          const eased=1-Math.pow(1-progress,3);
+          const current=Math.round(eased*target);
+          el.textContent=current+suffix;
+          if(progress<1)requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+    });
+  },{threshold:0.3});
+
+  numberEls.forEach(function(el){observer.observe(el)});
+})();
+
+// ===== Product carousel scroll buttons =====
+(function(){
+  'use strict';
+  const scroll=document.getElementById('productsScroll');
+  const left=document.getElementById('scrollLeft');
+  const right=document.getElementById('scrollRight');
+  if(scroll&&left&&right){
+    left.addEventListener('click',function(){scroll.scrollBy({left:-384,behavior:'smooth'})});
+    right.addEventListener('click',function(){scroll.scrollBy({left:384,behavior:'smooth'})});
+  }
+})();
+</script>
+</body>
+</html>
