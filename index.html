@@ -634,8 +634,8 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
       if(!lockedHeroMax)lockedHeroMax=window.innerHeight*1.2;
       const mobileTarget=lockedHeroMax>0?Math.min(1,window.scrollY/lockedHeroMax):0;
       if(mobileTarget>scrollProgress){
-        // Forward: slow lerp so animation is visible
-        const maxStep=0.012;
+        // Forward: very slow lerp so animation is clearly visible
+        const maxStep=0.004;
         const diff=mobileTarget-scrollProgress;
         scrollProgress+=Math.min(diff,maxStep);
       }else{
