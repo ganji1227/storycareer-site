@@ -630,9 +630,18 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
   let lockedHeroMax=0;
   function updateScroll(){
     if(isMobile){
-      // Mobile: direct follow, no lerp, use locked heroMax
+      // Mobile: lerp forward only (slow advance, instant retreat)
       if(!lockedHeroMax)lockedHeroMax=window.innerHeight*1.2;
-      scrollProgress=lockedHeroMax>0?Math.min(1,window.scrollY/lockedHeroMax):0;
+      const mobileTarget=lockedHeroMax>0?Math.min(1,window.scrollY/lockedHeroMax):0;
+      if(mobileTarget>scrollProgress){
+        // Forward: slow lerp so animation is visible
+        const maxStep=0.012;
+        const diff=mobileTarget-scrollProgress;
+        scrollProgress+=Math.min(diff,maxStep);
+      }else{
+        // Backward: follow immediately (prevents bounce-back to rect)
+        scrollProgress=mobileTarget;
+      }
     }else if(hasCompletedOnce){
       scrollProgress=scrollTarget;
     }else{
