@@ -871,7 +871,7 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
 
   window.addEventListener('resize',resize);window.addEventListener('scroll',onScroll,{passive:true});
   window.addEventListener('mousemove',onMM);window.addEventListener('mouseleave',onML);
-  window.addEventListener('touchmove',onTM,{passive:true});window.addEventListener('touchend',onTE);
+  if(!isMobile){window.addEventListener('touchmove',onTM,{passive:true});window.addEventListener('touchend',onTE)}
   resize();onScroll();animate();
 })();
 
