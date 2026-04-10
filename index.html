@@ -653,6 +653,9 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
     }
     progressBar.style.width=(scrollProgress*100)+'%';
     if(scrollProgress>0.08)scrollIndicator.classList.add('hidden');else scrollIndicator.classList.remove('hidden');
+    // Debug: show on screen (remove later)
+    if(!document.getElementById('dbg')){const d=document.createElement('div');d.id='dbg';d.style.cssText='position:fixed;top:10px;right:10px;z-index:999;color:#ffaa44;font-size:12px;font-family:monospace;background:rgba(0,0,0,0.7);padding:6px 10px;border-radius:4px';document.body.appendChild(d)}
+    document.getElementById('dbg').textContent=`mobile:${isMobile} prog:${scrollProgress.toFixed(3)} scrollY:${Math.round(window.scrollY)} heroMax:${Math.round(lockedHeroMax||0)}`;
   }
   function onMM(e){mouse.x=e.clientX;mouse.y=e.clientY}function onML(){mouse.x=-9999;mouse.y=-9999}
   function onTM(e){if(e.touches.length>0){mouse.x=e.touches[0].clientX;mouse.y=e.touches[0].clientY}}function onTE(){mouse.x=-9999;mouse.y=-9999}
