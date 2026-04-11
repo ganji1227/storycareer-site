@@ -265,6 +265,10 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
             <h3 class="product-card-title">AIマーケ部長</h3>
             <p class="product-card-desc">AIが企業のマーケティング業務を自動化。戦略立案から実行まで。</p>
           </div>
+          <div class="product-card">
+            <h3 class="product-card-title">キャリスキ</h3>
+            <p class="product-card-desc">東証プライム上場企業への決定率100%の実績を持つキャリア支援ノウハウをAIに集約。高精度なスキル分析と最適なキャリアパスを提案。</p>
+          </div>
         </div>
         <button class="scroll-hint scroll-hint-left" id="scrollLeft" aria-label="前へスクロール"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
         <button class="scroll-hint scroll-hint-right" id="scrollRight" aria-label="次へスクロール"><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></button>
@@ -277,22 +281,20 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
     <!-- bg handled by ambient canvas -->
     <div class="section-inner">
       <p class="section-label fade-up">Track Record</p>
-      <div class="numbers-grid">
+      <div class="numbers-grid" style="grid-template-columns:repeat(3,1fr)">
         <div class="number-item fade-up" style="transition-delay:0.1s">
           <div class="number-item-value" data-target="50" data-suffix="+">0</div>
           <p class="number-item-label">支援企業数</p><div class="number-item-line"></div>
         </div>
         <div class="number-item fade-up" style="transition-delay:0.2s">
-          <div class="number-item-value" data-target="200" data-suffix="%">0</div>
-          <p class="number-item-label">平均採用効率改善</p><div class="number-item-line"></div>
-        </div>
-        <div class="number-item fade-up" style="transition-delay:0.3s">
-          <div class="number-item-value" data-target="30" data-suffix="+">0</div>
+          <div class="number-item-value" data-target="10" data-suffix="+">0</div>
           <p class="number-item-label">導入プロダクト数</p><div class="number-item-line"></div>
         </div>
-        <div class="number-item fade-up" style="transition-delay:0.4s">
-          <div class="number-item-value" data-target="98" data-suffix="%">0</div>
-          <p class="number-item-label">継続率</p><div class="number-item-line"></div>
+        <div class="number-item fade-up" style="transition-delay:0.3s">
+          <div class="number-item-value" data-target="88" data-suffix="%" data-prefix="約">0</div>
+          <p class="number-item-label">AXによる業務改善例</p>
+          <p class="number-item-sub" style="font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.65rem,0.8vw,0.75rem);color:rgba(255,255,255,0.35);margin-top:0.4rem;letter-spacing:0.05em">(社員1人当たり月25時間削減)</p>
+          <div class="number-item-line"></div>
         </div>
       </div>
     </div>
@@ -932,6 +934,7 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
         const el=entry.target;
         const target=parseInt(el.getAttribute('data-target'),10);
         const suffix=el.getAttribute('data-suffix')||'';
+        const prefix=el.getAttribute('data-prefix')||'';
         const duration=1500;
         const start=performance.now();
 
@@ -940,7 +943,7 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
           const progress=Math.min(elapsed/duration,1);
           const eased=1-Math.pow(1-progress,3);
           const current=Math.round(eased*target);
-          el.textContent=current+suffix;
+          el.textContent=prefix+current+suffix;
           if(progress<1)requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
