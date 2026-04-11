@@ -66,10 +66,8 @@ canvas#c{display:block;width:100%;height:100%}
 #purpose .purpose-block{max-width:780px;margin:0 auto}
 #purpose .purpose-line{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(0.95rem,1.6vw,1.25rem);color:rgba(255,255,255,0.75);letter-spacing:0.08em;line-height:2.4;margin-bottom:0}
 #purpose .purpose-spacer{height:2.5rem}
-#purpose .purpose-highlight-wrap{position:relative;padding:2rem 0 2rem 2em;margin:0.5rem 0}
-#purpose .purpose-highlight-bar{position:absolute;left:0;top:0;width:2px;height:0;background:linear-gradient(180deg,#ffaa44,#ff8844);transition:height 1.2s cubic-bezier(0.22,1,0.36,1) 0.3s}
-#purpose .purpose-highlight-wrap.visible .purpose-highlight-bar{height:100%}
-#purpose .purpose-highlight{font-family:'Noto Serif JP',serif;font-weight:700;font-size:clamp(1.05rem,1.8vw,1.35rem);color:rgba(255,255,255,0.95);letter-spacing:0.1em;line-height:2.2}
+#purpose .purpose-highlight-wrap{position:relative;padding:2.5rem 0;margin:0.5rem 0;text-align:center}
+#purpose .purpose-highlight{font-family:'Noto Serif JP',serif;font-weight:700;font-size:clamp(1.1rem,2vw,1.5rem);letter-spacing:0.12em;line-height:2.2;background:linear-gradient(135deg,#ffaa44,#ffcc66,#ffaa44);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 #purpose .purpose-closing{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(0.95rem,1.6vw,1.25rem);color:rgba(255,255,255,0.75);letter-spacing:0.08em;line-height:2.4}
 
 /* ===== What We Do ===== */
@@ -184,7 +182,6 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
         <div class="purpose-spacer"></div>
         <p class="purpose-line fade-up" style="transition-delay:0.48s">我々は、</p>
         <div class="purpose-highlight-wrap fade-up" style="transition-delay:0.60s">
-          <div class="purpose-highlight-bar"></div>
           <p class="purpose-highlight">「AIに向いている業務は何か、人にしかできない業務は何か」</p>
         </div>
         <div class="purpose-spacer"></div>
