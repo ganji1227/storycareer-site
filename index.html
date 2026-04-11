@@ -855,7 +855,7 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
     let flashT=0;
     if(lsEl){
       const lsTop=lsEl.getBoundingClientRect().top;
-      const glowStart=window.innerHeight*0.8,peakAt=window.innerHeight*0.15,fadeOut=-window.innerHeight*0.7;
+      const glowStart=window.innerHeight*0.8,peakAt=window.innerHeight*0.15,fadeOut=-window.innerHeight*0.2;
       if(lsTop<=glowStart&&lsTop>peakAt){
         // Phase 1: glow in
         flashT=Math.pow(1-(lsTop-peakAt)/(glowStart-peakAt),2);
@@ -872,6 +872,11 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
     if(flashT>0.7){
       const whiteAlpha=(flashT-0.7)/0.3;// 0→1 in last 30%
       ctx.fillStyle=`rgba(245,244,240,${whiteAlpha})`;
+      ctx.fillRect(0,0,W,H);
+    }
+    // At peak: fully opaque white to match background exactly (no seam)
+    if(flashT>=0.95){
+      ctx.fillStyle='#f5f4f0';
       ctx.fillRect(0,0,W,H);
     }
 
