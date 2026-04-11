@@ -1055,7 +1055,7 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
     requestAnimationFrame(update);
     const rect=lightSections.getBoundingClientRect();
     // Switch to light when light-sections reaches near viewport top
-    if(rect.top<=window.innerHeight*0.1){
+    if(rect.top<=window.innerHeight*0.35){
       setLight(true)
     }else{
       setLight(false)
