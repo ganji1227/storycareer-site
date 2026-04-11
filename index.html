@@ -86,6 +86,7 @@ canvas#c{display:block;width:100%;height:100%}
 #purpose .purpose-closing{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(0.95rem,1.6vw,1.25rem);color:rgba(255,255,255,0.75);letter-spacing:0.08em;line-height:2.4}
 
 /* ===== What We Do ===== */
+#whatwedo{padding-top:180px}
 .whatwedo-cols{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:start;margin-top:3rem}
 .whatwedo-col{padding:40px;border:1px solid rgba(255,255,255,0.15);border-radius:16px;background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all 0.5s}
 .whatwedo-col:hover{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.08)}
@@ -844,7 +845,7 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
       // Alpha: lower in ambient mode (subtle background)
       const heroAlpha=pt.baseAlpha*(1+vT*0.4)*pt.bornAlpha;
       const ambAlpha=0.12+Math.random()*0.01;// subtle
-      pt.alpha=Math.min(1,heroAlpha*(1-ambT*0.7));// fade to ~30% in ambient
+      pt.alpha=Math.min(1,heroAlpha*(1-ambT*0.88));// fade to ~12% in ambient (less visible on white bg)
     }
 
     // No connection lines — particles only
