@@ -42,16 +42,14 @@ canvas#c{display:block;width:100%;height:100%}
 
 /* ===== Content sections ===== */
 #content{position:relative;z-index:4;background:transparent}
-/* Purpose: dark bg with gradient fade-in */
-#purpose-bg{position:relative;z-index:0}
-#purpose-bg::before{content:'';position:absolute;top:0;left:0;right:0;height:300px;background:linear-gradient(to bottom,transparent 0%,rgba(10,10,10,0.65) 100%);pointer-events:none}
-#purpose-bg::after{content:'';position:absolute;top:300px;left:0;right:0;bottom:0;background:rgba(10,10,10,0.65);pointer-events:none}
-/* Dark-to-light transition zone */
-#theme-transition{position:relative;height:200px;overflow:hidden;z-index:4}
-#theme-transition .transition-gradient{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,10,0.65) 0%,#f5f4f0 100%)}
-#theme-transition canvas{position:absolute;inset:0;z-index:1}
+/* Dark sections wrapper */
+.dark-sections{position:relative;z-index:4}
+.dark-sections::before{content:'';position:absolute;top:0;left:0;right:0;height:300px;background:linear-gradient(to bottom,transparent 0%,rgba(10,10,10,0.65) 100%);pointer-events:none}
+.dark-sections::after{content:'';position:absolute;top:300px;left:0;right:0;bottom:0;background:rgba(10,10,10,0.65);pointer-events:none}
+/* White flash overlay */
+#white-flash{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#f5f4f0;z-index:6;opacity:0;pointer-events:none;transition:none}
 /* Light sections */
-.light-sections{background:#f5f4f0;position:relative;z-index:4}
+.light-sections{background:#f5f4f0;position:relative;z-index:7}
 .section{padding:120px 0;position:relative;overflow:hidden}
 .section-inner{max-width:1200px;margin:0 auto;padding:0 40px;position:relative;z-index:2}
 /* Dark section labels/text */
@@ -185,8 +183,8 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
 <!-- Content sections -->
 <div id="content">
 
-  <!-- Purpose (dark) -->
-  <div id="purpose-bg">
+  <!-- Dark sections -->
+  <div class="dark-sections">
   <section id="purpose" class="section dark-section">
     <div class="section-inner">
       <div class="purpose-block">
@@ -206,13 +204,10 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
       <div class="section-divider"></div>
     </div>
   </section>
-  </div><!-- /purpose-bg -->
+  </div><!-- /dark-sections -->
 
-  <!-- Transition: dark to light with particle canvas -->
-  <div id="theme-transition">
-    <div class="transition-gradient"></div>
-    <canvas id="transitionCanvas"></canvas>
-  </div>
+  <!-- White flash overlay (controlled by JS) -->
+  <div id="white-flash"></div>
 
   <!-- Light sections -->
   <div class="light-sections">
@@ -827,28 +822,37 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
 
     // No connection lines — particles only
 
+    // Get flash intensity for particle glow effect
+    const flashEl=document.getElementById('white-flash');
+    const flashT=flashEl?parseFloat(flashEl.style.opacity)||0:0;
+
     for(let i=0;i<N_TOTAL;i++){
       const pt=particles[i];
       if(!pt.born||pt.bornAlpha<0.01)continue;
       const c=lerpColor(pt.colorT);
       const tp=textPos[i];
       const edgeBoost=(tp&&tp.isEdge&&phase==='organic'&&pastHeroT<0.5)?1:0;
-      const glowR=pt.glowRadius*(1-edgeBoost*0.3);
-      const coreAlpha=pt.alpha*(1+edgeBoost*0.4);
+      // During flash: particles grow and shift to white
+      const flashGrow=1+flashT*3;// up to 4x size
+      const flashWhite=Math.round(flashT*200);// shift toward white
+      const fr=Math.min(255,c.r+flashWhite);
+      const fg=Math.min(255,c.g+flashWhite);
+      const fb=Math.min(255,c.b+flashWhite);
+      const flashAlphaBoost=1+flashT*2;// brighter during flash
+      const glowR=pt.glowRadius*(1-edgeBoost*0.3)*flashGrow;
+      const coreAlpha=Math.min(1,pt.alpha*(1+edgeBoost*0.4)*flashAlphaBoost);
       if(isMobile){
-        // Lightweight: single filled circle, no radialGradient
-        // Edge particles in organic: full opacity, larger for crisp outline
         const isOrgEdge=(tp&&tp.isEdge&&phase==='organic'&&pastHeroT<0.3)?1:0;
         const cw=vT*60+edgeBoost*40+isOrgEdge*60;
         const mAlpha=Math.min(1,coreAlpha*(isOrgEdge?1.5:0.8));
-        const mRadius=pt.radius*(isOrgEdge?1.8:1.3);
-        ctx.fillStyle=`rgba(${Math.min(255,c.r+cw)},${Math.min(255,c.g+cw)},${Math.min(255,c.b+cw)},${mAlpha})`;
+        const mRadius=pt.radius*(isOrgEdge?1.8:1.3)*flashGrow;
+        ctx.fillStyle=`rgba(${Math.min(255,fr+cw)},${Math.min(255,fg+cw)},${Math.min(255,fb+cw)},${mAlpha})`;
         ctx.beginPath();ctx.arc(pt.x,pt.y,mRadius,0,Math.PI*2);ctx.fill();
       }else{
         const gr=ctx.createRadialGradient(pt.x,pt.y,0,pt.x,pt.y,glowR);
-        gr.addColorStop(0,`rgba(${Math.min(255,c.r+40+edgeBoost*30)},${Math.min(255,c.g+30+edgeBoost*30)},${Math.min(255,c.b+20+edgeBoost*20)},${Math.min(1,coreAlpha*0.6)})`);
-        gr.addColorStop(0.3,`rgba(${c.r},${c.g},${c.b},${pt.alpha*0.2})`);
-        gr.addColorStop(1,`rgba(${c.r},${c.g},${c.b},0)`);
+        gr.addColorStop(0,`rgba(${Math.min(255,fr+40+edgeBoost*30)},${Math.min(255,fg+30+edgeBoost*30)},${Math.min(255,fb+20+edgeBoost*20)},${Math.min(1,coreAlpha*0.6)})`);
+        gr.addColorStop(0.3,`rgba(${fr},${fg},${fb},${pt.alpha*0.2*flashAlphaBoost})`);
+        gr.addColorStop(1,`rgba(${fr},${fg},${fb},0)`);
         ctx.fillStyle=gr;ctx.beginPath();ctx.arc(pt.x,pt.y,glowR,0,Math.PI*2);ctx.fill();
         const cw=vT*60+edgeBoost*40;
         ctx.fillStyle=`rgba(${Math.min(255,c.r+cw)},${Math.min(255,c.g+cw)},${Math.min(255,c.b+cw)},${Math.min(1,coreAlpha)})`;
@@ -987,68 +991,33 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
   numberEls.forEach(function(el){observer.observe(el)});
 })();
 
-// ===== Transition canvas (dark→light particles) =====
+// ===== White flash transition (particles glow → screen turns white) =====
 (function(){
-  const canvas=document.getElementById('transitionCanvas');
-  if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  const COUNT=60;
-  let W,H,particles=[];
+  const flash=document.getElementById('white-flash');
+  const lightSections=document.querySelector('.light-sections');
+  if(!flash||!lightSections)return;
 
-  function resize(){
-    const rect=canvas.parentElement.getBoundingClientRect();
-    W=rect.width;H=rect.height;
-    canvas.width=W*devicePixelRatio;canvas.height=H*devicePixelRatio;
-    canvas.style.width=W+'px';canvas.style.height=H+'px';
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-  }
-  function init(){
-    particles=[];
-    for(let i=0;i<COUNT;i++){
-      const t=i/COUNT;
-      // Particles transition from amber/blue (dark theme) to warm gold (light theme)
-      const progress=Math.random();// vertical position ratio
-      particles.push({
-        x:Math.random()*W,
-        y:progress*H,
-        vx:(Math.random()-0.5)*0.3,
-        vy:0.1+Math.random()*0.15,
-        radius:0.8+Math.random()*2,
-        glowRadius:4+Math.random()*8,
-        phase:Math.random()*Math.PI*2,
-        speed:0.2+Math.random()*0.4,
-        // Color transitions from hero palette to warm gold
-        r:Math.round(74+t*(220-74)),
-        g:Math.round(144+t*(160-144)),
-        b:Math.round(217+t*(60-217)),
-        alpha:0.15+Math.random()*0.2
-      });
+  // Track scroll position relative to light sections
+  function update(){
+    requestAnimationFrame(update);
+    const rect=lightSections.getBoundingClientRect();
+    // Start glowing 200px before light sections enter viewport
+    const triggerStart=200;
+    const triggerEnd=0;// fully white when light sections hit top of viewport area
+    const distToView=rect.top;
+
+    if(distToView>triggerStart){
+      flash.style.opacity=0;
+    }else if(distToView>triggerEnd){
+      // Ease in: particles glow effect via opacity
+      const t=1-(distToView-triggerEnd)/(triggerStart-triggerEnd);
+      const eased=t*t;// accelerate into white
+      flash.style.opacity=eased;
+    }else{
+      flash.style.opacity=0;// hide after transition (light bg takes over)
     }
   }
-  function draw(){
-    requestAnimationFrame(draw);
-    ctx.clearRect(0,0,W,H);
-    const time=performance.now()*0.001;
-    for(const p of particles){
-      p.x+=p.vx+Math.sin(time*p.speed+p.phase)*0.3;
-      p.y+=p.vy;
-      if(p.y>H+10){p.y=-10;p.x=Math.random()*W}
-      if(p.x<-10)p.x=W+10;if(p.x>W+10)p.x=-10;
-      // Fade based on vertical position (more visible in middle)
-      const vFade=1-Math.abs(p.y/H-0.5)*2;
-      const a=p.alpha*Math.max(0,vFade);
-      if(a<0.01)continue;
-      const gr=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.glowRadius);
-      gr.addColorStop(0,`rgba(${p.r},${p.g},${p.b},${a*0.6})`);
-      gr.addColorStop(0.4,`rgba(${p.r},${p.g},${p.b},${a*0.15})`);
-      gr.addColorStop(1,`rgba(${p.r},${p.g},${p.b},0)`);
-      ctx.fillStyle=gr;ctx.beginPath();ctx.arc(p.x,p.y,p.glowRadius,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle=`rgba(${p.r},${p.g},${p.b},${a})`;
-      ctx.beginPath();ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);ctx.fill();
-    }
-  }
-  window.addEventListener('resize',resize);
-  resize();init();draw();
+  update();
 })();
 
 // ===== Product carousel scroll buttons =====
