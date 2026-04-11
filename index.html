@@ -712,7 +712,8 @@ footer p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem
       const isOriginal=i<N_BEFORE;
       const dx=pt.x-mouse.x,dy=pt.y-mouse.y,dist=Math.sqrt(dx*dx+dy*dy);
       let cpx=0,cpy=0;
-      if(dist<120&&dist>0){const f=(1-dist/120)*0.6;cpx=(dx/dist)*f*30;cpy=(dy/dist)*f*30}
+      const cursorR=(phase==='organic'&&pastHeroT<0.3)?60:120;
+      if(dist<cursorR&&dist>0){const f=(1-dist/cursorR)*0.6;cpx=(dx/dist)*f*30;cpy=(dy/dist)*f*30}
 
       // Ambient mode: when scrolled past hero, particles scatter to ambient positions
       const isAmbient=pastHeroT>0;
