@@ -61,9 +61,9 @@ canvas#c{display:block;width:100%;height:100%}
 .light-sections .section-label{font-family:'Noto Sans JP',sans-serif;font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:1rem;font-weight:400;transition:color 0.5s}
 .light-sections .section-heading{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.3rem,2.5vw,2rem);color:rgba(255,255,255,0.9);letter-spacing:0.15em;line-height:1.8;margin-bottom:2rem;transition:color 0.5s}
 .light-sections .section-body{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.85rem,1.1vw,1rem);line-height:2;color:rgba(255,255,255,0.55);letter-spacing:0.05em;transition:color 0.5s}
-.light-sections.is-light .section-label{color:rgba(10,10,10,0.35)}
-.light-sections.is-light .section-heading{color:rgba(10,10,10,0.85)}
-.light-sections.is-light .section-body{color:rgba(10,10,10,0.5)}
+.light-sections.is-light .section-label{color:rgba(10,10,10,0.55)}
+.light-sections.is-light .section-heading{color:rgba(10,10,10,1)}
+.light-sections.is-light .section-body{color:rgba(10,10,10,0.75)}
 .section-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(10,10,10,0.08),transparent);margin-top:120px}
 
 /* ===== Scroll animations ===== */
@@ -93,11 +93,11 @@ canvas#c{display:block;width:100%;height:100%}
 .is-light .whatwedo-col:hover{border-color:rgba(10,10,10,0.15);background:rgba(255,255,255,0.9);box-shadow:0 8px 40px rgba(10,10,10,0.06)}
 .whatwedo-icon{width:80px;height:80px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-family:'Noto Sans JP',sans-serif;font-weight:700;font-size:0.85rem;color:rgba(255,255,255,0.6);letter-spacing:0.1em;position:relative;overflow:hidden;transition:all 0.5s}
 .whatwedo-icon::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(255,170,68,0.1) 0%,transparent 70%);opacity:0;transition:opacity 0.5s}
-.is-light .whatwedo-icon{border-color:rgba(10,10,10,0.1);color:rgba(10,10,10,0.5)}
+.is-light .whatwedo-icon{border-color:rgba(10,10,10,0.1);color:rgba(10,10,10,0.75)}
 .whatwedo-col:hover .whatwedo-icon{border-color:rgba(255,136,68,0.4);color:rgba(255,136,68,1)}
 .whatwedo-col:hover .whatwedo-icon::after{opacity:1}
 .whatwedo-col-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1rem,1.5vw,1.3rem);color:rgba(255,255,255,0.9);letter-spacing:0.12em;margin-bottom:1rem;transition:color 0.5s}
-.is-light .whatwedo-col-title{color:rgba(10,10,10,0.85)}
+.is-light .whatwedo-col-title{color:rgba(10,10,10,1)}
 .whatwedo-cross{display:flex;align-items:center;justify-content:center;font-family:'Noto Serif JP',serif;font-size:2rem;color:rgba(255,255,255,0.08);padding:0 24px;padding-top:80px;transition:color 0.5s}
 .is-light .whatwedo-cross{color:rgba(10,10,10,0.12)}
 .slide-left{opacity:0;transform:translateX(-50px);transition:opacity 1s cubic-bezier(0.22,1,0.36,1),transform 1s cubic-bezier(0.22,1,0.36,1)}
@@ -116,9 +116,9 @@ canvas#c{display:block;width:100%;height:100%}
 .service-card-num{font-family:'Noto Sans JP',sans-serif;font-weight:700;font-size:0.7rem;color:rgba(255,170,68,0.4);letter-spacing:0.15em;margin-bottom:1.2rem;transition:color 0.5s}
 .is-light .service-card-num{color:rgba(255,136,68,0.5)}
 .service-card-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1rem,1.3vw,1.15rem);color:rgba(255,255,255,0.9);letter-spacing:0.1em;margin-bottom:1rem;transition:color 0.5s}
-.is-light .service-card-title{color:rgba(10,10,10,0.85)}
+.is-light .service-card-title{color:rgba(10,10,10,1)}
 .service-card-desc{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.8rem,0.95vw,0.9rem);line-height:1.9;color:rgba(255,255,255,0.5);letter-spacing:0.04em;transition:color 0.5s}
-.is-light .service-card-desc{color:rgba(10,10,10,0.5)}
+.is-light .service-card-desc{color:rgba(10,10,10,0.75)}
 
 /* ===== Products ===== */
 .products-wrapper{position:relative;margin-top:3rem;padding:0 50px}
@@ -134,9 +134,9 @@ canvas#c{display:block;width:100%;height:100%}
 .is-light .product-card{border-color:rgba(10,10,10,0.08);background:rgba(255,255,255,0.7)}
 .is-light .product-card:hover{border-color:rgba(10,10,10,0.15);background:rgba(255,255,255,0.9);box-shadow:0 12px 40px rgba(10,10,10,0.08)}
 .product-card-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1rem,1.3vw,1.15rem);color:rgba(255,255,255,0.9);letter-spacing:0.1em;margin-bottom:1rem;transition:color 0.5s}
-.is-light .product-card-title{color:rgba(10,10,10,0.85)}
+.is-light .product-card-title{color:rgba(10,10,10,1)}
 .product-card-desc{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.8rem,0.95vw,0.9rem);line-height:1.9;color:rgba(255,255,255,0.5);letter-spacing:0.04em;transition:color 0.5s}
-.is-light .product-card-desc{color:rgba(10,10,10,0.5)}
+.is-light .product-card-desc{color:rgba(10,10,10,0.75)}
 .scroll-hint{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border:1px solid rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(10,10,10,0.8);transition:all 0.5s;z-index:2}
 .is-light .scroll-hint{border-color:rgba(10,10,10,0.12);background:rgba(245,244,240,0.9)}
 .scroll-hint svg{width:14px;height:14px;stroke:rgba(255,255,255,0.5);fill:none;stroke-width:2;transition:stroke 0.5s}
@@ -153,7 +153,7 @@ canvas#c{display:block;width:100%;height:100%}
 .is-light .number-item:hover{border-color:rgba(10,10,10,0.15);background:rgba(255,255,255,0.9);box-shadow:0 8px 30px rgba(10,10,10,0.06)}
 .number-item-value{font-family:'Noto Serif JP',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;background:linear-gradient(135deg,#ffaa44,#ff8844,#ffcc66);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.05em;line-height:1.2}
 .number-item-label{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.7rem,0.9vw,0.85rem);color:rgba(255,255,255,0.4);letter-spacing:0.1em;margin-top:1rem;transition:color 0.5s}
-.is-light .number-item-label{color:rgba(10,10,10,0.4)}
+.is-light .number-item-label{color:rgba(10,10,10,0.7)}
 .number-item-line{width:24px;height:1px;background:linear-gradient(90deg,#ffaa44,transparent);margin:0.8rem auto 0;opacity:0;transition:opacity 0.8s 0.5s,width 0.8s 0.5s}
 .number-item.visible .number-item-line{opacity:1;width:40px}
 
@@ -173,7 +173,7 @@ canvas#c{display:block;width:100%;height:100%}
 .is-light .contact-cta:hover{background:rgba(210,100,30,0.95);color:#fff;border-color:#d06820;box-shadow:0 12px 40px rgba(210,100,30,0.15)}
 .contact-cta:hover::before{left:100%}
 .contact-email{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.8rem;color:rgba(255,255,255,0.25);letter-spacing:0.1em;margin-top:2rem;transition:color 0.5s}
-.is-light .contact-email{color:rgba(10,10,10,0.3)}
+.is-light .contact-email{color:rgba(10,10,10,0.55)}
 
 /* ===== Footer ===== */
 footer{border-top:1px solid rgba(255,255,255,0.06);padding:40px 0;text-align:center;position:relative;z-index:4;background:#0a0a0a;transition:all 0.5s}
@@ -854,7 +854,7 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
     let flashT=0;
     if(lsEl){
       const lsTop=lsEl.getBoundingClientRect().top;
-      const glowStart=window.innerHeight*0.4,peakAt=-100,fadeOut=-400;
+      const glowStart=window.innerHeight*0.7,peakAt=window.innerHeight*0.1,fadeOut=-200;
       if(lsTop<=glowStart&&lsTop>peakAt){
         // Phase 1: glow in
         flashT=Math.pow(1-(lsTop-peakAt)/(glowStart-peakAt),2);
@@ -1055,7 +1055,7 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
     requestAnimationFrame(update);
     const rect=lightSections.getBoundingClientRect();
     // Switch to light when light-sections reaches near viewport top
-    if(rect.top<=-50){
+    if(rect.top<=window.innerHeight*0.15){
       setLight(true)
     }else{
       setLight(false)
