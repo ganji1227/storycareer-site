@@ -46,8 +46,8 @@ canvas#c{display:block;width:100%;height:100%}
 .dark-sections{position:relative;z-index:4}
 .dark-sections::before{content:'';position:absolute;top:0;left:0;right:0;height:300px;background:linear-gradient(to bottom,transparent 0%,rgba(10,10,10,0.65) 100%);pointer-events:none}
 .dark-sections::after{content:'';position:absolute;top:300px;left:0;right:0;bottom:0;background:rgba(10,10,10,0.65);pointer-events:none}
-/* White flash overlay — covers everything */
-#white-flash{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#f5f4f0;z-index:99;opacity:0;pointer-events:none;transition:none}
+/* White flash overlay — no longer used, canvas handles the glow */
+#white-flash{display:none}
 /* Light sections — starts dark, JS adds .is-light */
 .light-sections{background:#0a0a0a;position:relative;z-index:4}
 .light-sections.is-light{background:#f5f4f0}
@@ -849,23 +849,37 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
 
     // No connection lines — particles only
 
-    // Get flash intensity for particle glow effect
-    const flashEl=document.getElementById('white-flash');
-    const flashT=flashEl?parseFloat(flashEl.style.opacity)||0:0;
+    // Flash intensity: read from light-sections position
+    const lsEl=document.querySelector('.light-sections');
+    let flashT=0;
+    if(lsEl){
+      const lsTop=lsEl.getBoundingClientRect().top;
+      const glowStart=400,peakAt=100;
+      if(lsTop<=glowStart&&lsTop>peakAt)flashT=Math.pow(1-(lsTop-peakAt)/(glowStart-peakAt),2);
+      else if(lsTop<=peakAt)flashT=1;
+    }
+
+    // When flash is near peak, fill canvas with white (particles have overwhelmed the screen)
+    if(flashT>0.7){
+      const whiteAlpha=(flashT-0.7)/0.3;// 0→1 in last 30%
+      ctx.fillStyle=`rgba(245,244,240,${whiteAlpha})`;
+      ctx.fillRect(0,0,W,H);
+    }
 
     for(let i=0;i<N_TOTAL;i++){
       const pt=particles[i];
       if(!pt.born||pt.bornAlpha<0.01)continue;
+      if(flashT>=1)continue;// fully white, skip drawing particles
       const c=lerpColor(pt.colorT);
       const tp=textPos[i];
       const edgeBoost=(tp&&tp.isEdge&&phase==='organic'&&pastHeroT<0.5)?1:0;
-      // During flash: particles grow and shift to white
-      const flashGrow=1+flashT*3;// up to 4x size
-      const flashWhite=Math.round(flashT*200);// shift toward white
+      // During flash: particles grow massively, shift white, alpha maxes out
+      const flashGrow=1+flashT*8;// up to 9x size at peak
+      const flashWhite=Math.round(flashT*255);// fully white at peak
       const fr=Math.min(255,c.r+flashWhite);
       const fg=Math.min(255,c.g+flashWhite);
       const fb=Math.min(255,c.b+flashWhite);
-      const flashAlphaBoost=1+flashT*2;// brighter during flash
+      const flashAlphaBoost=1+flashT*4;// 5x brighter at peak
       const glowR=pt.glowRadius*(1-edgeBoost*0.3)*flashGrow;
       const coreAlpha=Math.min(1,pt.alpha*(1+edgeBoost*0.4)*flashAlphaBoost);
       if(isMobile){
@@ -877,13 +891,13 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
         ctx.beginPath();ctx.arc(pt.x,pt.y,mRadius,0,Math.PI*2);ctx.fill();
       }else{
         const gr=ctx.createRadialGradient(pt.x,pt.y,0,pt.x,pt.y,glowR);
-        gr.addColorStop(0,`rgba(${Math.min(255,fr+40+edgeBoost*30)},${Math.min(255,fg+30+edgeBoost*30)},${Math.min(255,fb+20+edgeBoost*20)},${Math.min(1,coreAlpha*0.6)})`);
-        gr.addColorStop(0.3,`rgba(${fr},${fg},${fb},${pt.alpha*0.2*flashAlphaBoost})`);
+        gr.addColorStop(0,`rgba(${fr},${fg},${fb},${Math.min(1,coreAlpha*0.7)})`);
+        gr.addColorStop(0.3,`rgba(${fr},${fg},${fb},${Math.min(1,pt.alpha*0.3*flashAlphaBoost)})`);
         gr.addColorStop(1,`rgba(${fr},${fg},${fb},0)`);
         ctx.fillStyle=gr;ctx.beginPath();ctx.arc(pt.x,pt.y,glowR,0,Math.PI*2);ctx.fill();
         const cw=vT*60+edgeBoost*40;
-        ctx.fillStyle=`rgba(${Math.min(255,c.r+cw)},${Math.min(255,c.g+cw)},${Math.min(255,c.b+cw)},${Math.min(1,coreAlpha)})`;
-        ctx.beginPath();ctx.arc(pt.x,pt.y,pt.radius,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle=`rgba(${Math.min(255,fr+cw)},${Math.min(255,fg+cw)},${Math.min(255,fb+cw)},${Math.min(1,coreAlpha)})`;
+        ctx.beginPath();ctx.arc(pt.x,pt.y,pt.radius*flashGrow*0.5,0,Math.PI*2);ctx.fill();
       }
     }
 
@@ -1018,12 +1032,11 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
   numberEls.forEach(function(el){observer.observe(el)});
 })();
 
-// ===== White flash transition (particles glow → screen turns white) =====
+// ===== Theme switch (canvas handles glow, this just toggles .is-light) =====
 (function(){
-  const flash=document.getElementById('white-flash');
   const lightSections=document.querySelector('.light-sections');
   const footerEl=document.querySelector('footer');
-  if(!flash||!lightSections)return;
+  if(!lightSections)return;
   let switched=false;
   function setLight(on){
     if(on&&!switched){lightSections.classList.add('is-light');if(footerEl)footerEl.classList.add('is-light');switched=true}
@@ -1033,31 +1046,11 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
   function update(){
     requestAnimationFrame(update);
     const rect=lightSections.getBoundingClientRect();
-    // Phase 1: glow up (300px before light sections reach viewport center)
-    // Phase 2: hold white flash briefly
-    // Phase 3: fade out flash, reveal light bg underneath
-    const glowStart=400;// start glowing
-    const peakAt=100;// fully white
-    const fadeEnd=-100;// flash gone, light bg visible
-    const dist=rect.top;
-
-    if(dist>glowStart){
-      // Not yet — dark
-      flash.style.opacity=0;
-      setLight(false)
-    }else if(dist>peakAt){
-      // Phase 1: glow in
-      const t=1-(dist-peakAt)/(glowStart-peakAt);
-      flash.style.opacity=t*t;
-    }else if(dist>fadeEnd){
-      // Phase 2+3: peak then fade, switch bg
+    // Switch to light when light-sections reaches near viewport top
+    if(rect.top<=100){
       setLight(true)
-      const t=(peakAt-dist)/(peakAt-fadeEnd);
-      flash.style.opacity=1-t;// fade out
     }else{
-      // Fully transitioned
-      flash.style.opacity=0;
-      setLight(true)
+      setLight(false)
     }
   }
   update();
