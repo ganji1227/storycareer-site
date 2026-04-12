@@ -869,14 +869,10 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
     }
 
     // When flash is near peak, fill canvas with white (particles have overwhelmed the screen)
-    if(flashT>0.7){
-      const whiteAlpha=(flashT-0.7)/0.3;// 0→1 in last 30%
+    // White fill starts early and ramps up fast to hide dark/light boundary
+    if(flashT>0.2){
+      const whiteAlpha=Math.min(1,Math.pow((flashT-0.2)/0.6,1.5));// aggressive curve, reaches 1.0 at flashT~0.8
       ctx.fillStyle=`rgba(245,244,240,${whiteAlpha})`;
-      ctx.fillRect(0,0,W,H);
-    }
-    // At peak: fully opaque white to match background exactly (no seam)
-    if(flashT>=0.95){
-      ctx.fillStyle='#f5f4f0';
       ctx.fillRect(0,0,W,H);
     }
 
