@@ -855,7 +855,7 @@ footer.is-light p{color:rgba(10,10,10,0.3)}
     let flashT=0;
     if(lsEl){
       const lsTop=lsEl.getBoundingClientRect().top;
-      const glowStart=window.innerHeight*0.8,peakAt=window.innerHeight*0.15,fadeOut=-window.innerHeight*0.2;
+      const glowStart=window.innerHeight*0.8,peakAt=window.innerHeight*0.15,fadeOut=-window.innerHeight*0.08;
       if(lsTop<=glowStart&&lsTop>peakAt){
         // Phase 1: glow in
         flashT=Math.pow(1-(lsTop-peakAt)/(glowStart-peakAt),2);
