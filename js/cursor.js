@@ -4,6 +4,8 @@
 (function(){
   // Ensure cursor is hidden even before CSS fully loads
   document.documentElement.style.cursor='none';
+  // Expose click pulse globally so page-specific particle systems can react
+  window._cursorPulse=0;
   var cursorCanvas=document.createElement('canvas');
   cursorCanvas.style.cssText='position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;pointer-events:none';
   document.body.appendChild(cursorCanvas);
@@ -49,6 +51,7 @@
       clickPulse*=0.985;
     }
     if(clickPulse<0.01)clickPulse=0;
+    window._cursorPulse=clickPulse;
     var pulseSize=1+clickPulse*2.5;
     var pulseAlpha=1+clickPulse*1.5;
 

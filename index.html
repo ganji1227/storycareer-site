@@ -851,8 +851,19 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
       const isOriginal=i<N_BEFORE;
       const dx=pt.x-mouse.x,dy=pt.y-mouse.y,dist=Math.sqrt(dx*dx+dy*dy);
       let cpx=0,cpy=0;
+      const pulse=window._cursorPulse||0;
       const cursorR=(phase==='organic'&&pastHeroT<0.3)?60:120;
+      // Normal hover repulsion
       if(dist<cursorR&&dist>0){const f=(1-dist/cursorR)*0.6;cpx=(dx/dist)*f*30;cpy=(dy/dist)*f*30}
+      // Click pulse: shockwave pushes particles outward
+      if(pulse>0.01){
+        const pulseR=cursorR+pulse*200;// shockwave radius expands with pulse
+        if(dist<pulseR&&dist>0){
+          const f=(1-dist/pulseR)*pulse*2.5;
+          cpx+=(dx/dist)*f*40;
+          cpy+=(dy/dist)*f*40;
+        }
+      }
 
       // Ambient mode: when scrolled past hero, particles scatter to ambient positions
       const isAmbient=pastHeroT>0;
