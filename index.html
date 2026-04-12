@@ -857,11 +857,11 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
       if(dist<cursorR&&dist>0){const f=(1-dist/cursorR)*0.6;cpx=(dx/dist)*f*30;cpy=(dy/dist)*f*30}
       // Click pulse: shockwave pushes particles outward
       if(pulse>0.01){
-        const pulseR=cursorR+pulse*200;// shockwave radius expands with pulse
+        const pulseR=cursorR+pulse*100;
         if(dist<pulseR&&dist>0){
-          const f=(1-dist/pulseR)*pulse*2.5;
-          cpx+=(dx/dist)*f*40;
-          cpy+=(dy/dist)*f*40;
+          const f=(1-dist/pulseR)*pulse*1.25;
+          cpx+=(dx/dist)*f*20;
+          cpy+=(dy/dist)*f*20;
         }
       }
 
@@ -1118,6 +1118,8 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
         // Cursor push
         const cdx=x-mouse.x,cdy=y-mouse.y,cdist=Math.sqrt(cdx*cdx+cdy*cdy);
         if(cdist<120&&cdist>0){const cf=(1-cdist/120)*0.6;x+=cdx/cdist*cf*30;y+=cdy/cdist*cf*30}
+        const jpPulse=window._cursorPulse||0;
+        if(jpPulse>0.01){const pR2=120+jpPulse*50;if(cdist<pR2&&cdist>0){const pf=(1-cdist/pR2)*jpPulse*0.6;x+=cdx/cdist*pf*10;y+=cdy/cdist*pf*10}}
         const a=particleAlpha*0.9;
         if(a<0.01)continue;
         const oR=255,oG=Math.round(140+jp.colorT*60),oB=Math.round(30+jp.colorT*40);
