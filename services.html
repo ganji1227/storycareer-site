@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サービス | STORY CAREER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Noto+Serif+JP:wght@300;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica Neue',Arial,sans-serif;color:rgba(10,10,10,0.75)}
+
+/* ===== Header ===== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:103;padding:24px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(245,244,240,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(10,10,10,0.06)}
+.site-logo{font-family:'Noto Serif JP',serif;font-weight:700;font-size:1rem;color:rgba(10,10,10,0.9);letter-spacing:0.1em;text-decoration:none;z-index:102}
+.hamburger{width:28px;height:20px;position:relative;cursor:pointer;z-index:102;background:none;border:none;padding:0}
+.hamburger span{display:block;width:100%;height:1.5px;background:rgba(10,10,10,0.7);position:absolute;left:0;transition:all 0.4s cubic-bezier(0.22,1,0.36,1)}
+.hamburger span:nth-child(1){top:0}
+.hamburger span:nth-child(2){top:9px}
+.hamburger span:nth-child(3){top:18px}
+.hamburger.open span:nth-child(1){top:9px;transform:rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){top:9px;transform:rotate(-45deg)}
+.nav-overlay{position:fixed;inset:0;z-index:101;background:rgba(245,244,240,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.5s cubic-bezier(0.22,1,0.36,1)}
+.nav-overlay.open{opacity:1;pointer-events:auto}
+.nav-menu{list-style:none;text-align:center}
+.nav-menu li{margin:1.5rem 0;opacity:0;transform:translateY(20px);transition:opacity 0.5s,transform 0.5s}
+.nav-overlay.open .nav-menu li{opacity:1;transform:translateY(0)}
+.nav-overlay.open .nav-menu li:nth-child(1){transition-delay:0.1s}
+.nav-overlay.open .nav-menu li:nth-child(2){transition-delay:0.15s}
+.nav-overlay.open .nav-menu li:nth-child(3){transition-delay:0.2s}
+.nav-overlay.open .nav-menu li:nth-child(4){transition-delay:0.25s}
+.nav-overlay.open .nav-menu li:nth-child(5){transition-delay:0.3s}
+.nav-menu a{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.2rem,2.5vw,1.8rem);color:rgba(10,10,10,0.8);text-decoration:none;letter-spacing:0.15em;transition:color 0.3s}
+.nav-menu a:hover{color:rgba(210,100,30,0.9)}
+.nav-menu .nav-label{display:block;font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.65rem;letter-spacing:0.2em;color:rgba(10,10,10,0.35);margin-top:0.3rem;text-transform:uppercase}
+
+/* ===== Hero ===== */
+.page-hero{padding:180px 0 100px;text-align:center}
+.page-hero-label{font-family:'Noto Sans JP',sans-serif;font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(10,10,10,0.4);margin-bottom:1rem;font-weight:400}
+.page-hero-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.5rem,3vw,2.2rem);color:rgba(10,10,10,1);letter-spacing:0.15em;line-height:1.8}
+.page-hero-sub{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.8rem,1vw,0.9rem);color:rgba(10,10,10,0.5);letter-spacing:0.06em;margin-top:1.5rem;line-height:1.9}
+.page-hero-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,rgba(210,100,30,0.4),transparent);margin:2.5rem auto 0}
+
+/* ===== Service Block ===== */
+.service-block{padding:100px 0;position:relative}
+.service-block:nth-child(even){background:rgba(255,255,255,0.4)}
+.service-block-inner{max-width:900px;margin:0 auto;padding:0 40px}
+.service-num{font-family:'Noto Sans JP',sans-serif;font-weight:700;font-size:0.7rem;color:rgba(210,100,30,0.5);letter-spacing:0.15em;margin-bottom:1.2rem}
+.service-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.2rem,2vw,1.6rem);color:rgba(10,10,10,1);letter-spacing:0.12em;margin-bottom:1rem;line-height:1.6}
+.service-subtitle{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.8rem,1vw,0.9rem);color:rgba(10,10,10,0.5);letter-spacing:0.06em;margin-bottom:2.5rem;line-height:1.8}
+.service-features{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.service-feature{padding:28px;border-radius:12px;border:1px solid rgba(10,10,10,0.06);background:rgba(255,255,255,0.7);transition:all 0.4s}
+.service-feature:hover{border-color:rgba(10,10,10,0.12);background:rgba(255,255,255,0.95);box-shadow:0 8px 30px rgba(10,10,10,0.04);transform:translateY(-2px)}
+.service-feature-title{font-family:'Noto Sans JP',sans-serif;font-weight:400;font-size:clamp(0.85rem,1vw,0.95rem);color:rgba(10,10,10,0.9);letter-spacing:0.06em;margin-bottom:0.6rem}
+.service-feature-desc{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.75rem,0.9vw,0.85rem);color:rgba(10,10,10,0.55);line-height:1.8;letter-spacing:0.03em}
+
+/* ===== Divider ===== */
+.section-divider{width:100%;max-width:700px;height:1px;background:linear-gradient(90deg,transparent,rgba(10,10,10,0.08),transparent);margin:0 auto}
+
+/* ===== CTA ===== */
+.cta-section{padding:120px 0;text-align:center}
+.cta-heading{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.1rem,1.8vw,1.5rem);color:rgba(10,10,10,0.85);letter-spacing:0.1em;line-height:2;margin-bottom:2.5rem}
+.cta-btn{display:inline-block;border:1px solid rgba(210,100,30,0.6);background:transparent;color:#d06820;padding:18px 56px;border-radius:8px;letter-spacing:0.2em;font-family:'Noto Sans JP',sans-serif;font-weight:400;font-size:0.9rem;cursor:pointer;transition:all 0.4s cubic-bezier(0.22,1,0.36,1);text-decoration:none;position:relative;overflow:hidden}
+.cta-btn:hover{background:rgba(210,100,30,0.95);color:#fff;border-color:#d06820;transform:translateY(-2px);box-shadow:0 12px 40px rgba(210,100,30,0.15)}
+
+/* ===== Footer ===== */
+footer{border-top:1px solid rgba(10,10,10,0.06);padding:60px 0 40px;text-align:center;background:#f5f4f0}
+.footer-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:start}
+.footer-logo{font-family:'Noto Serif JP',serif;font-weight:700;font-size:0.9rem;color:rgba(10,10,10,0.5);letter-spacing:0.1em;text-decoration:none}
+.footer-nav{display:flex;gap:2rem;list-style:none;flex-wrap:wrap}
+.footer-nav a{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem;color:rgba(10,10,10,0.35);letter-spacing:0.08em;text-decoration:none;transition:color 0.3s}
+.footer-nav a:hover{color:rgba(10,10,10,0.8)}
+.footer-copy{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.7rem;color:rgba(10,10,10,0.25);letter-spacing:0.1em;margin-top:2rem;grid-column:1/-1;text-align:center}
+
+/* ===== Scroll animations ===== */
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity 0.8s cubic-bezier(0.22,1,0.36,1),transform 0.8s cubic-bezier(0.22,1,0.36,1)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .site-header{padding:16px 20px}
+  .footer-inner{grid-template-columns:1fr;text-align:center}
+  .footer-nav{justify-content:center}
+  .page-hero{padding:140px 0 60px}
+  .service-block{padding:60px 0}
+  .service-block-inner{padding:0 24px}
+  .service-features{grid-template-columns:1fr}
+  .cta-section{padding:80px 0}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="site-logo">STORY CAREER</a>
+  <button class="hamburger" id="hamburger" aria-label="メニュー"><span></span><span></span><span></span></button>
+</header>
+<nav class="nav-overlay" id="navOverlay">
+  <ul class="nav-menu">
+    <li><a href="index.html">Top<span class="nav-label">トップ</span></a></li>
+    <li><a href="about.html">About<span class="nav-label">会社概要</span></a></li>
+    <li><a href="services.html">Services<span class="nav-label">サービス</span></a></li>
+    <li><a href="contact.html">Contact<span class="nav-label">お問い合わせ</span></a></li>
+    <li><a href="privacy.html">Privacy Policy<span class="nav-label">プライバシーポリシー</span></a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <p class="page-hero-label fade-up">Services</p>
+  <h1 class="page-hero-title fade-up" style="transition-delay:0.1s">提供しているサービス</h1>
+  <p class="page-hero-sub fade-up" style="transition-delay:0.2s">採用の上流設計から実行、そしてAIによる業務変革まで。<br>人と事業の可能性を、両面から引き出します。</p>
+  <div class="page-hero-line fade-up" style="transition-delay:0.3s"></div>
+</div>
+
+<!-- 01 採用コンサルティング -->
+<div class="service-block">
+  <div class="service-block-inner">
+    <p class="service-num fade-up">01</p>
+    <h2 class="service-title fade-up" style="transition-delay:0.1s">採用コンサルティング</h2>
+    <p class="service-subtitle fade-up" style="transition-delay:0.15s">ペルソナ設計、データドリブンな母集団形成と候補者体験の設計。<br>採用活動の「上流」から戦略を描きます。</p>
+    <ul class="service-features">
+      <li class="service-feature fade-up" style="transition-delay:0.2s">
+        <p class="service-feature-title">採用ペルソナ設計</p>
+        <p class="service-feature-desc">事業戦略と組織課題から逆算し、本当に必要な人材像を定義します。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.25s">
+        <p class="service-feature-title">母集団形成戦略</p>
+        <p class="service-feature-desc">チャネル分析とデータに基づき、最適な母集団の獲得経路を設計します。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.3s">
+        <p class="service-feature-title">候補者体験（CX）設計</p>
+        <p class="service-feature-desc">応募から入社までの候補者体験を設計し、選考離脱率を改善します。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.35s">
+        <p class="service-feature-title">採用ブランディング</p>
+        <p class="service-feature-desc">求人原稿・採用サイト・SNSを通じて、企業の魅力を候補者に届けます。</p>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- 02 RPO -->
+<div class="service-block">
+  <div class="service-block-inner">
+    <p class="service-num fade-up">02</p>
+    <h2 class="service-title fade-up" style="transition-delay:0.1s">RPO（採用業務の代行）</h2>
+    <p class="service-subtitle fade-up" style="transition-delay:0.15s">採用活動の設計・運用・改善をワンストップで。<br>採用担当者の負荷を軽減しながら、採用成果を最大化します。</p>
+    <ul class="service-features">
+      <li class="service-feature fade-up" style="transition-delay:0.2s">
+        <p class="service-feature-title">求人媒体の運用代行</p>
+        <p class="service-feature-desc">求人の作成・更新・効果測定まで、媒体運用を丸ごとお任せいただけます。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.25s">
+        <p class="service-feature-title">書類選考・面接代行</p>
+        <p class="service-feature-desc">貴社の選考基準に基づき、書類選考から一次面接までを代行します。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.3s">
+        <p class="service-feature-title">エージェント管理</p>
+        <p class="service-feature-desc">複数の人材紹介会社とのやり取りを一元管理し、紹介精度を向上させます。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.35s">
+        <p class="service-feature-title">採用データ分析・改善</p>
+        <p class="service-feature-desc">選考ファネルを可視化し、ボトルネックの特定と改善施策を実行します。</p>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- 03 AXコンサルティング -->
+<div class="service-block">
+  <div class="service-block-inner">
+    <p class="service-num fade-up">03</p>
+    <h2 class="service-title fade-up" style="transition-delay:0.1s">AXコンサルティング</h2>
+    <p class="service-subtitle fade-up" style="transition-delay:0.15s">AI導入の戦略策定から業務実装まで伴走。<br>人の価値が最大化される組織への変革を支援します。</p>
+    <ul class="service-features">
+      <li class="service-feature fade-up" style="transition-delay:0.2s">
+        <p class="service-feature-title">業務プロセス分析</p>
+        <p class="service-feature-desc">現場業務を可視化し、AI化すべき業務と人が担うべき業務を切り分けます。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.25s">
+        <p class="service-feature-title">AI導入戦略の策定</p>
+        <p class="service-feature-desc">事業目標に沿ったAI活用のロードマップを設計します。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.3s">
+        <p class="service-feature-title">AI業務ツールの実装</p>
+        <p class="service-feature-desc">チャットボット・自動化ワークフロー等、業務に直結するAIツールを構築・導入します。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.35s">
+        <p class="service-feature-title">社内AI人材の育成</p>
+        <p class="service-feature-desc">AIを使いこなせる組織づくりのための研修・ハンズオンを提供します。</p>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- 04 HRプロダクトの開発・運営 -->
+<div class="service-block">
+  <div class="service-block-inner">
+    <p class="service-num fade-up">04</p>
+    <h2 class="service-title fade-up" style="transition-delay:0.1s">HRプロダクトの開発・運営</h2>
+    <p class="service-subtitle fade-up" style="transition-delay:0.15s">HR&times;AIの独自プロダクトを企画・開発・運用。<br>採用の課題をテクノロジーで解決します。</p>
+    <ul class="service-features">
+      <li class="service-feature fade-up" style="transition-delay:0.2s">
+        <p class="service-feature-title">AI採用社長</p>
+        <p class="service-feature-desc">経営者の想い・価値観をAIが学習し、候補者と24時間対話する採用チャットボット。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.25s">
+        <p class="service-feature-title">キャリスキ（開発中）</p>
+        <p class="service-feature-desc">キャリア支援ノウハウをAIに集約し、高精度なスキル分析と最適なキャリアパスを提案。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.3s">
+        <p class="service-feature-title">採用マーケティングHub</p>
+        <p class="service-feature-desc">全チャネルを一元管理し、AIがデータを分析。採用戦略の精度を向上させます。</p>
+      </li>
+      <li class="service-feature fade-up" style="transition-delay:0.35s">
+        <p class="service-feature-title">カスタム開発</p>
+        <p class="service-feature-desc">貴社固有の採用課題に合わせた、オーダーメイドのHR×AIツールを開発します。</p>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="cta-section">
+  <div>
+    <p class="cta-heading fade-up">サービスの詳細やお見積もりなど、<br>お気軽にご相談ください。</p>
+    <div class="fade-up" style="transition-delay:0.15s">
+      <a href="contact.html" class="cta-btn">お問い合わせ</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">STORY CAREER</a>
+    <ul class="footer-nav">
+      <li><a href="about.html">会社概要</a></li>
+      <li><a href="services.html">サービス</a></li>
+      <li><a href="contact.html">お問い合わせ</a></li>
+      <li><a href="privacy.html">プライバシーポリシー</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2026 STORY CAREER Inc.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const observer=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible')});
+  },{threshold:0.15});
+  document.querySelectorAll('.fade-up').forEach(function(el){observer.observe(el)});
+
+  // Hamburger menu
+  var hamburger=document.getElementById('hamburger');
+  var overlay=document.getElementById('navOverlay');
+  if(hamburger&&overlay){
+    hamburger.addEventListener('click',function(){
+      hamburger.classList.toggle('open');
+      overlay.classList.toggle('open');
+      document.body.style.overflow=overlay.classList.contains('open')?'hidden':'';
+    });
+    overlay.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click',function(){
+        hamburger.classList.remove('open');
+        overlay.classList.remove('open');
+        document.body.style.overflow='';
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
