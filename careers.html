@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>採用情報 | STORY CAREER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Noto+Serif+JP:wght@300;700&display=swap" rel="stylesheet">
+<style>*{cursor:none!important}</style>
+<link rel="stylesheet" href="css/common.css">
+<style>
+html{scroll-behavior:smooth}
+body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica Neue',Arial,sans-serif;color:rgba(10,10,10,0.75);min-height:100vh;display:flex;flex-direction:column}
+
+/* ===== Hero ===== */
+.page-hero{padding:180px 0 80px;text-align:center}
+.page-hero-label{font-family:'Noto Sans JP',sans-serif;font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(10,10,10,0.4);margin-bottom:1rem;font-weight:400}
+.page-hero-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.5rem,3vw,2.2rem);color:rgba(10,10,10,1);letter-spacing:0.15em;line-height:1.8}
+.page-hero-sub{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.8rem,1vw,0.9rem);color:rgba(10,10,10,0.5);letter-spacing:0.06em;margin-top:1.5rem;line-height:1.9;max-width:640px;margin-left:auto;margin-right:auto}
+.page-hero-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,rgba(210,100,30,0.4),transparent);margin:2.5rem auto 0}
+
+/* ===== Message ===== */
+.careers-message{padding:40px 0 100px;text-align:center}
+.careers-message-inner{max-width:720px;margin:0 auto;padding:0 40px}
+.careers-message-text{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(0.95rem,1.4vw,1.15rem);color:rgba(10,10,10,0.75);letter-spacing:0.08em;line-height:2.4}
+.careers-message-text+.careers-message-text{margin-top:1.5rem}
+.careers-message-highlight{position:relative;display:inline;background:linear-gradient(transparent 60%,rgba(212,85,42,0.12) 60%)}
+
+/* ===== Values ===== */
+.careers-values{padding:80px 0;background:rgba(255,255,255,0.4)}
+.careers-values-inner{max-width:900px;margin:0 auto;padding:0 40px}
+.careers-values-label{font-family:'Noto Sans JP',sans-serif;font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(10,10,10,0.4);margin-bottom:1rem;font-weight:400;text-align:center}
+.careers-values-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.2rem,2vw,1.5rem);color:rgba(10,10,10,1);letter-spacing:0.12em;text-align:center;margin-bottom:3rem}
+.values-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.value-card{padding:32px;border-radius:12px;border:1px solid rgba(10,10,10,0.06);background:rgba(255,255,255,0.7);transition:all 0.4s}
+.value-card:hover{background:rgba(255,255,255,0.95);box-shadow:0 8px 30px rgba(10,10,10,0.04);transform:translateY(-2px)}
+.value-card-num{font-family:'Noto Sans JP',sans-serif;font-weight:700;font-size:0.65rem;color:rgba(212,85,42,0.5);letter-spacing:0.15em;margin-bottom:0.8rem}
+.value-card-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(0.95rem,1.2vw,1.1rem);color:rgba(10,10,10,0.9);letter-spacing:0.08em;margin-bottom:0.8rem}
+.value-card-desc{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.78rem,0.9vw,0.85rem);color:rgba(10,10,10,0.55);line-height:1.9;letter-spacing:0.03em}
+
+/* ===== Position ===== */
+.careers-position{padding:100px 0}
+.careers-position-inner{max-width:900px;margin:0 auto;padding:0 40px}
+.position-label{font-family:'Noto Sans JP',sans-serif;font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(10,10,10,0.4);margin-bottom:1rem;font-weight:400}
+.position-card{border:1px solid rgba(10,10,10,0.06);border-radius:16px;background:rgba(255,255,255,0.7);padding:48px;margin-top:2rem}
+.position-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.2rem,1.8vw,1.5rem);color:rgba(10,10,10,1);letter-spacing:0.1em;margin-bottom:0.5rem}
+.position-subtitle{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.8rem;color:rgba(10,10,10,0.45);letter-spacing:0.08em;margin-bottom:2.5rem}
+.position-table{width:100%;border-collapse:collapse}
+.position-table tr{border-bottom:1px solid rgba(10,10,10,0.05)}
+.position-table th{font-family:'Noto Sans JP',sans-serif;font-weight:400;font-size:clamp(0.78rem,0.9vw,0.85rem);color:rgba(10,10,10,0.45);letter-spacing:0.06em;padding:20px 20px 20px 0;text-align:left;vertical-align:top;width:120px;white-space:nowrap}
+.position-table td{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.82rem,0.95vw,0.9rem);color:rgba(10,10,10,0.75);letter-spacing:0.04em;line-height:1.9;padding:20px 0}
+.position-table td ul{list-style:none;margin:0;padding:0}
+.position-table td li{padding-left:1em;position:relative;margin-bottom:0.3rem}
+.position-table td li::before{content:'';position:absolute;left:0;top:0.7em;width:4px;height:4px;border-radius:50%;background:rgba(212,85,42,0.3)}
+
+/* ===== CTA ===== */
+.careers-cta{padding:80px 0 120px;text-align:center}
+.careers-cta-text{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1rem,1.5vw,1.25rem);color:rgba(10,10,10,0.8);letter-spacing:0.1em;line-height:2;margin-bottom:2.5rem}
+.careers-cta-btn{display:inline-block;border:1px solid rgba(212,85,42,0.6);background:transparent;color:#d4552a;padding:18px 56px;border-radius:8px;letter-spacing:0.2em;font-family:'Noto Sans JP',sans-serif;font-weight:400;font-size:0.9rem;text-decoration:none;transition:all 0.4s cubic-bezier(0.22,1,0.36,1)}
+.careers-cta-btn:hover{background:rgba(212,85,42,0.95);color:#fff;border-color:#d4552a;transform:translateY(-2px);box-shadow:0 12px 40px rgba(212,85,42,0.15)}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .page-hero{padding:140px 0 60px}
+  .careers-message{padding:20px 0 60px}
+  .careers-message-inner{padding:0 24px}
+  .careers-values{padding:60px 0}
+  .careers-values-inner,.careers-position-inner{padding:0 24px}
+  .values-grid{grid-template-columns:1fr}
+  .careers-position{padding:60px 0}
+  .position-card{padding:28px}
+  .position-table th{display:block;padding:16px 0 4px;width:100%}
+  .position-table td{display:block;padding:4px 0 16px}
+  .careers-cta{padding:60px 0 80px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="site-logo">STORY CAREER</a>
+  <button class="hamburger" id="hamburger" aria-label="メニュー"><span></span><span></span><span></span></button>
+</header>
+<nav class="nav-overlay" id="navOverlay">
+  <ul class="nav-menu">
+    <li><a href="index.html">Top<span class="nav-label">トップ</span></a></li>
+    <li><a href="about.html">About<span class="nav-label">会社概要</span></a></li>
+    <li><a href="services.html">Services<span class="nav-label">サービス</span></a></li>
+    <li><a href="news.html">News<span class="nav-label">お知らせ</span></a></li>
+    <li><a href="careers.html">Careers<span class="nav-label">採用情報</span></a></li>
+    <li><a href="contact.html">Contact<span class="nav-label">お問い合わせ</span></a></li>
+    <li><a href="privacy.html">Privacy Policy<span class="nav-label">プライバシーポリシー</span></a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <p class="page-hero-label fade-up">Careers</p>
+  <h1 class="page-hero-title fade-up" style="transition-delay:0.1s">採用情報</h1>
+  <p class="page-hero-sub fade-up" style="transition-delay:0.2s">AIの時代に、人の価値を最大化する。<br>そんな仕事を、一緒につくりませんか。</p>
+  <div class="page-hero-line fade-up" style="transition-delay:0.3s"></div>
+</div>
+
+<section class="careers-message">
+  <div class="careers-message-inner">
+    <p class="careers-message-text fade-up">
+      私たちが考える「これからの人材」は、<br>エンジニアでもコンサルタントでもありません。
+    </p>
+    <p class="careers-message-text fade-up" style="transition-delay:0.1s">
+      大切なのは、<span class="careers-message-highlight">どの業務をAIに任せ、どこに人の力を注ぐか</span>という判断ができること。<br>
+      そして、その企業や個人が持つ<span class="careers-message-highlight">「AIにはない良さ」を見つけ出し、<br>事業成長につなげていく</span>こと。
+    </p>
+    <p class="careers-message-text fade-up" style="transition-delay:0.2s">
+      ClaudeやCursorなどのAIツールを道具として使いこなしながら、<br>
+      人にしかできない価値を生み出す。<br>
+      それが、STORY CAREERの仕事です。
+    </p>
+  </div>
+</section>
+
+<section class="careers-values">
+  <div class="careers-values-inner">
+    <p class="careers-values-label fade-up">What We Value</p>
+    <h2 class="careers-values-title fade-up" style="transition-delay:0.1s">私たちが大切にしていること</h2>
+    <div class="values-grid">
+      <div class="value-card fade-up" style="transition-delay:0.15s">
+        <p class="value-card-num">01</p>
+        <h3 class="value-card-title">AI×人の境界を見極める力</h3>
+        <p class="value-card-desc">AIに向いている業務と、人にしかできない業務を正しく切り分けられること。テクノロジーを知り、同時に人間の強みを理解している人を求めています。</p>
+      </div>
+      <div class="value-card fade-up" style="transition-delay:0.2s">
+        <p class="value-card-num">02</p>
+        <h3 class="value-card-title">学び続ける姿勢</h3>
+        <p class="value-card-desc">AIの進化は速い。昨日の正解が今日の非効率になる世界で、常に学び、アップデートし続ける意欲があること。実務経験よりもこの姿勢を重視します。</p>
+      </div>
+      <div class="value-card fade-up" style="transition-delay:0.25s">
+        <p class="value-card-num">03</p>
+        <h3 class="value-card-title">「人の良さ」を引き出す力</h3>
+        <p class="value-card-desc">クライアント企業の中にある、AIでは代替できない強み — 文化、想い、人間関係。それを見つけ出し、事業成長に接続できる感性と論理の両方を持っていること。</p>
+      </div>
+      <div class="value-card fade-up" style="transition-delay:0.3s">
+        <p class="value-card-num">04</p>
+        <h3 class="value-card-title">越境する実行力</h3>
+        <p class="value-card-desc">HR、AI、プロダクト開発。領域を横断して動ける人を求めています。「自分の専門はここまで」と線を引かず、必要なことを学んで実行できること。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="careers-position">
+  <div class="careers-position-inner">
+    <p class="position-label fade-up">Open Position</p>
+
+    <div class="position-card fade-up" style="transition-delay:0.1s">
+      <h2 class="position-title">HR &times; AX ストラテジスト</h2>
+      <p class="position-subtitle">人と事業の可能性を、テクノロジーで引き出す</p>
+
+      <table class="position-table">
+        <tr>
+          <th>業務内容</th>
+          <td>
+            <ul>
+              <li>採用戦略の設計・コンサルティング（ペルソナ設計、チャネル戦略、CX設計）</li>
+              <li>RPO（採用業務の代行）の運用・改善</li>
+              <li>クライアント企業のAX（AI活用）コンサルティング</li>
+              <li>AIツール（Claude、Cursor等）を活用したHRプロダクトの開発・運用</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>求める人物像</th>
+          <td>
+            <ul>
+              <li>「この業務はAIに任せるべきか、人がやるべきか」を判断できる、もしくはその視点を持ちたい方</li>
+              <li>企業や個人の「AIにはない強み」を見つけ出し、事業成長につなげる思考ができる方</li>
+              <li>AIツールを使いこなすことに抵抗がなく、学ぶ意欲がある方</li>
+              <li>HR・採用領域に興味がある方（経験不問）</li>
+              <li>エンジニア経験は不要。Claude / Cursor等のAIツールで開発に取り組める方</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>雇用形態</th>
+          <td>正社員</td>
+        </tr>
+        <tr>
+          <th>勤務地</th>
+          <td>大阪府大阪市西淀川区佃3-2-26 千船駅前ビル301号室<br>※ リモートワーク相談可</td>
+        </tr>
+        <tr>
+          <th>給与</th>
+          <td>経験・能力に応じて決定（面談時にご相談）</td>
+        </tr>
+        <tr>
+          <th>選考フロー</th>
+          <td>書類選考 → カジュアル面談 → 面接（1〜2回）→ 内定</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="careers-cta">
+  <p class="careers-cta-text fade-up">少しでも興味を持っていただけたら、<br>まずはカジュアルにお話ししましょう。</p>
+  <div class="fade-up" style="transition-delay:0.15s">
+    <a href="contact.html" class="careers-cta-btn">応募・お問い合わせ</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">STORY CAREER</a>
+    <ul class="footer-nav">
+      <li><a href="about.html">会社概要</a></li>
+      <li><a href="services.html">サービス</a></li>
+      <li><a href="news.html">お知らせ</a></li>
+      <li><a href="careers.html">採用情報</a></li>
+      <li><a href="contact.html">お問い合わせ</a></li>
+      <li><a href="privacy.html">プライバシーポリシー</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2026 STORY CAREER Inc.</p>
+  </div>
+</footer>
+
+<script src="js/animations.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/cursor.js"></script>
+</body>
+</html>

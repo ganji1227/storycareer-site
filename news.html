@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お知らせ | STORY CAREER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Noto+Serif+JP:wght@300;700&display=swap" rel="stylesheet">
+<style>*{cursor:none!important}</style>
+<link rel="stylesheet" href="css/common.css">
+<style>
+html{scroll-behavior:smooth}
+body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica Neue',Arial,sans-serif;color:rgba(10,10,10,0.75);min-height:100vh;display:flex;flex-direction:column}
+
+/* ===== Hero ===== */
+.page-hero{padding:180px 0 80px;text-align:center}
+.page-hero-label{font-family:'Noto Sans JP',sans-serif;font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(10,10,10,0.4);margin-bottom:1rem;font-weight:400}
+.page-hero-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.5rem,3vw,2.2rem);color:rgba(10,10,10,1);letter-spacing:0.15em;line-height:1.8}
+.page-hero-sub{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.8rem,1vw,0.9rem);color:rgba(10,10,10,0.5);letter-spacing:0.06em;margin-top:1.5rem;line-height:1.9}
+.page-hero-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,rgba(210,100,30,0.4),transparent);margin:2.5rem auto 0}
+
+/* ===== Articles ===== */
+.articles-section{padding:40px 0 120px;flex:1}
+.articles-inner{max-width:900px;margin:0 auto;padding:0 40px}
+.article-list{list-style:none}
+.article-item{border-bottom:1px solid rgba(10,10,10,0.06);padding:28px 0;display:flex;gap:24px;align-items:flex-start;transition:background 0.3s}
+.article-item:hover{background:rgba(255,255,255,0.5);margin:0 -16px;padding-left:16px;padding-right:16px;border-radius:8px}
+.article-thumb{width:160px;height:100px;border-radius:8px;background:rgba(10,10,10,0.04);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.article-thumb-placeholder{font-family:'Noto Sans JP',sans-serif;font-size:0.65rem;color:rgba(10,10,10,0.2);letter-spacing:0.1em}
+.article-content{flex:1;min-width:0}
+.article-meta{display:flex;gap:1rem;align-items:center;margin-bottom:0.5rem}
+.article-date{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.75rem;color:rgba(10,10,10,0.4);letter-spacing:0.05em}
+.article-tag{font-family:'Noto Sans JP',sans-serif;font-weight:400;font-size:0.65rem;color:rgba(212,85,42,0.8);letter-spacing:0.08em;background:rgba(212,85,42,0.08);padding:2px 10px;border-radius:10px}
+.article-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(0.95rem,1.2vw,1.1rem);color:rgba(10,10,10,0.9);letter-spacing:0.06em;line-height:1.7;margin-bottom:0.4rem}
+.article-title a{color:inherit;text-decoration:none;transition:color 0.3s}
+.article-title a:hover{color:rgba(212,85,42,0.9)}
+.article-excerpt{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.78rem,0.9vw,0.85rem);color:rgba(10,10,10,0.5);line-height:1.8;letter-spacing:0.03em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ===== WordPress note ===== */
+.wp-note{max-width:900px;margin:0 auto;padding:0 40px 60px;text-align:center}
+.wp-note p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.8rem;color:rgba(10,10,10,0.3);letter-spacing:0.05em;line-height:1.8;background:rgba(10,10,10,0.02);padding:20px;border-radius:8px;border:1px dashed rgba(10,10,10,0.08)}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .page-hero{padding:140px 0 60px}
+  .articles-section{padding:20px 0 80px}
+  .articles-inner{padding:0 24px}
+  .article-item{flex-direction:column;gap:12px}
+  .article-thumb{width:100%;height:160px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="site-logo">STORY CAREER</a>
+  <button class="hamburger" id="hamburger" aria-label="メニュー"><span></span><span></span><span></span></button>
+</header>
+<nav class="nav-overlay" id="navOverlay">
+  <ul class="nav-menu">
+    <li><a href="index.html">Top<span class="nav-label">トップ</span></a></li>
+    <li><a href="about.html">About<span class="nav-label">会社概要</span></a></li>
+    <li><a href="services.html">Services<span class="nav-label">サービス</span></a></li>
+    <li><a href="news.html">News<span class="nav-label">お知らせ</span></a></li>
+    <li><a href="careers.html">Careers<span class="nav-label">採用情報</span></a></li>
+    <li><a href="contact.html">Contact<span class="nav-label">お問い合わせ</span></a></li>
+    <li><a href="privacy.html">Privacy Policy<span class="nav-label">プライバシーポリシー</span></a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <p class="page-hero-label fade-up">News</p>
+  <h1 class="page-hero-title fade-up" style="transition-delay:0.1s">お知らせ</h1>
+  <p class="page-hero-sub fade-up" style="transition-delay:0.2s">STORY CAREERの最新情報をお届けします。</p>
+  <div class="page-hero-line fade-up" style="transition-delay:0.3s"></div>
+</div>
+
+<section class="articles-section">
+  <div class="articles-inner">
+    <ul class="article-list">
+
+      <li class="article-item fade-up">
+        <div class="article-thumb"><span class="article-thumb-placeholder">IMAGE</span></div>
+        <div class="article-content">
+          <div class="article-meta">
+            <span class="article-date">2026.04.10</span>
+            <span class="article-tag">プロダクト</span>
+          </div>
+          <h2 class="article-title"><a href="#">AI採用社長の導入事例を公開しました</a></h2>
+          <p class="article-excerpt">経営者の想い・価値観をAIが学習し、候補者と24時間対話する採用チャットボット「AI採用社長」の導入事例を新たに公開しました。</p>
+        </div>
+      </li>
+
+      <li class="article-item fade-up" style="transition-delay:0.1s">
+        <div class="article-thumb"><span class="article-thumb-placeholder">IMAGE</span></div>
+        <div class="article-content">
+          <div class="article-meta">
+            <span class="article-date">2026.03.25</span>
+            <span class="article-tag">お知らせ</span>
+          </div>
+          <h2 class="article-title"><a href="#">コーポレートサイトをリニューアルしました</a></h2>
+          <p class="article-excerpt">STORY CAREERのミッション「人の可能性を再定義する。」をより体現するデザインにコーポレートサイトをリニューアルしました。</p>
+        </div>
+      </li>
+
+      <li class="article-item fade-up" style="transition-delay:0.2s">
+        <div class="article-thumb"><span class="article-thumb-placeholder">IMAGE</span></div>
+        <div class="article-content">
+          <div class="article-meta">
+            <span class="article-date">2026.03.10</span>
+            <span class="article-tag">サービス</span>
+          </div>
+          <h2 class="article-title"><a href="#">AXコンサルティングサービスを正式リリース</a></h2>
+          <p class="article-excerpt">AI導入の戦略策定から業務実装まで伴走するAXコンサルティングサービスの提供を開始しました。</p>
+        </div>
+      </li>
+
+      <li class="article-item fade-up" style="transition-delay:0.3s">
+        <div class="article-thumb"><span class="article-thumb-placeholder">IMAGE</span></div>
+        <div class="article-content">
+          <div class="article-meta">
+            <span class="article-date">2026.02.15</span>
+            <span class="article-tag">メディア掲載</span>
+          </div>
+          <h2 class="article-title"><a href="#">HR×AI活用の最前線：代表坂元のインタビューが掲載されました</a></h2>
+          <p class="article-excerpt">HR業界におけるAI活用の現状と未来について、代表の坂元がインタビューを受けました。</p>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</section>
+
+<div class="wp-note">
+  <p>※ このページはWordPress連動を想定したプレースホルダーです。<br>実際の運用ではWordPress REST APIから記事データを取得し、動的に表示します。</p>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">STORY CAREER</a>
+    <ul class="footer-nav">
+      <li><a href="about.html">会社概要</a></li>
+      <li><a href="services.html">サービス</a></li>
+      <li><a href="news.html">お知らせ</a></li>
+      <li><a href="careers.html">採用情報</a></li>
+      <li><a href="contact.html">お問い合わせ</a></li>
+      <li><a href="privacy.html">プライバシーポリシー</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2026 STORY CAREER Inc.</p>
+  </div>
+</footer>
+
+<script src="js/animations.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/cursor.js"></script>
+</body>
+</html>

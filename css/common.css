@@ -22,6 +22,8 @@
 .nav-overlay.open .nav-menu li:nth-child(3){transition-delay:0.2s}
 .nav-overlay.open .nav-menu li:nth-child(4){transition-delay:0.25s}
 .nav-overlay.open .nav-menu li:nth-child(5){transition-delay:0.3s}
+.nav-overlay.open .nav-menu li:nth-child(6){transition-delay:0.35s}
+.nav-overlay.open .nav-menu li:nth-child(7){transition-delay:0.4s}
 .nav-menu a{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.2rem,2.5vw,1.8rem);color:rgba(10,10,10,0.8);text-decoration:none;letter-spacing:0.15em;transition:color 0.3s}
 .nav-menu a:hover{color:rgba(212,85,42,0.9)}
 .nav-menu .nav-label{display:block;font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.65rem;letter-spacing:0.2em;color:rgba(10,10,10,0.35);margin-top:0.3rem;text-transform:uppercase}

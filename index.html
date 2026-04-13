@@ -181,6 +181,28 @@ canvas#c{display:block;width:100%;height:100%}
 #message .message-deco{width:40px;height:1px;background:linear-gradient(90deg,transparent,#ffaa44,transparent);margin:0 auto 3rem;opacity:0.5}
 #message .message-attr{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.85rem;color:rgba(255,255,255,0.3);letter-spacing:0.25em;text-align:center;margin-top:3rem}
 
+/* ===== News (top page) ===== */
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:2.5rem}
+.news-card{border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);border-radius:12px;overflow:hidden;transition:all 0.5s;text-decoration:none;display:block}
+.news-card:hover{transform:translateY(-4px)}
+.is-light .news-card{border-color:rgba(10,10,10,0.06);background:rgba(255,255,255,0.7)}
+.is-light .news-card:hover{border-color:rgba(10,10,10,0.12);background:rgba(255,255,255,0.95);box-shadow:0 8px 30px rgba(10,10,10,0.05)}
+.news-card-thumb{width:100%;height:140px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-family:'Noto Sans JP',sans-serif;font-size:0.6rem;color:rgba(255,255,255,0.15);letter-spacing:0.1em;transition:color 0.5s,background 0.5s}
+.is-light .news-card-thumb{background:rgba(10,10,10,0.03);color:rgba(10,10,10,0.15)}
+.news-card-body{padding:20px}
+.news-card-meta{display:flex;gap:0.8rem;align-items:center;margin-bottom:0.5rem}
+.news-card-date{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.7rem;color:rgba(255,255,255,0.35);letter-spacing:0.05em;transition:color 0.5s}
+.is-light .news-card-date{color:rgba(10,10,10,0.4)}
+.news-card-tag{font-family:'Noto Sans JP',sans-serif;font-weight:400;font-size:0.6rem;color:rgba(255,170,68,0.7);letter-spacing:0.06em;background:rgba(255,170,68,0.1);padding:2px 8px;border-radius:8px;transition:all 0.5s}
+.is-light .news-card-tag{color:rgba(212,85,42,0.7);background:rgba(212,85,42,0.08)}
+.news-card-title{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.8rem,0.95vw,0.9rem);color:rgba(255,255,255,0.8);letter-spacing:0.04em;line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;transition:color 0.5s}
+.is-light .news-card-title{color:rgba(10,10,10,0.8)}
+.news-more{text-align:center;margin-top:2.5rem}
+.news-more a{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.8rem;color:rgba(255,255,255,0.4);letter-spacing:0.15em;text-decoration:none;transition:color 0.3s}
+.news-more a:hover{color:rgba(255,170,68,0.9)}
+.is-light .news-more a{color:rgba(10,10,10,0.4)}
+.is-light .news-more a:hover{color:rgba(212,85,42,0.9)}
+
 /* ===== Contact ===== */
 #contact{text-align:center;padding:160px 0}
 .contact-cta{display:inline-block;border:1px solid rgba(255,170,68,0.6);background:transparent;color:#ffaa44;padding:18px 56px;border-radius:8px;letter-spacing:0.2em;font-family:'Noto Sans JP',sans-serif;font-weight:400;font-size:0.9rem;cursor:pointer;transition:all 0.4s cubic-bezier(0.22,1,0.36,1);text-decoration:none;margin-top:2.5rem;position:relative;overflow:hidden}
@@ -215,6 +237,8 @@ canvas#c{display:block;width:100%;height:100%}
 .nav-overlay.open .nav-menu li:nth-child(3){transition-delay:0.2s}
 .nav-overlay.open .nav-menu li:nth-child(4){transition-delay:0.25s}
 .nav-overlay.open .nav-menu li:nth-child(5){transition-delay:0.3s}
+.nav-overlay.open .nav-menu li:nth-child(6){transition-delay:0.35s}
+.nav-overlay.open .nav-menu li:nth-child(7){transition-delay:0.4s}
 .nav-menu a{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.2rem,2.5vw,1.8rem);color:rgba(10,10,10,0.8);text-decoration:none;letter-spacing:0.15em;transition:color 0.3s}
 .nav-menu a:hover{color:rgba(212,85,42,0.9)}
 .nav-menu .nav-label{display:block;font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.65rem;letter-spacing:0.2em;color:rgba(10,10,10,0.35);margin-top:0.3rem;text-transform:uppercase}
@@ -243,6 +267,7 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
   .services-grid{grid-template-columns:1fr}
   .product-card{flex:0 0 300px}
   .numbers-grid{grid-template-columns:1fr 1fr;gap:30px}
+  .news-grid{grid-template-columns:1fr}
   .scroll-hint{display:none}
   #message{padding:60px 0}
   .section-divider{margin-top:60px}
@@ -263,6 +288,8 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
     <li><a href="index.html">Top<span class="nav-label">トップ</span></a></li>
     <li><a href="about.html">About<span class="nav-label">会社概要</span></a></li>
     <li><a href="services.html">Services<span class="nav-label">サービス</span></a></li>
+    <li><a href="news.html">News<span class="nav-label">お知らせ</span></a></li>
+    <li><a href="careers.html">Careers<span class="nav-label">採用情報</span></a></li>
     <li><a href="contact.html">Contact<span class="nav-label">お問い合わせ</span></a></li>
     <li><a href="privacy.html">Privacy Policy<span class="nav-label">プライバシーポリシー</span></a></li>
   </ul>
@@ -418,6 +445,49 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
     </div>
   </section>
 
+  <!-- News -->
+  <section id="news" class="section">
+    <div class="section-inner">
+      <p class="section-label fade-up">News</p>
+      <h2 class="section-heading fade-up" style="transition-delay:0.15s">お知らせ</h2>
+      <div class="news-grid">
+        <a href="article.html" class="news-card fade-up" style="transition-delay:0.2s">
+          <div class="news-card-thumb">IMAGE</div>
+          <div class="news-card-body">
+            <div class="news-card-meta">
+              <span class="news-card-date">2026.04.10</span>
+              <span class="news-card-tag">プロダクト</span>
+            </div>
+            <p class="news-card-title">AI採用社長の導入事例を公開しました</p>
+          </div>
+        </a>
+        <a href="article.html" class="news-card fade-up" style="transition-delay:0.3s">
+          <div class="news-card-thumb">IMAGE</div>
+          <div class="news-card-body">
+            <div class="news-card-meta">
+              <span class="news-card-date">2026.03.25</span>
+              <span class="news-card-tag">お知らせ</span>
+            </div>
+            <p class="news-card-title">コーポレートサイトをリニューアルしました</p>
+          </div>
+        </a>
+        <a href="article.html" class="news-card fade-up" style="transition-delay:0.4s">
+          <div class="news-card-thumb">IMAGE</div>
+          <div class="news-card-body">
+            <div class="news-card-meta">
+              <span class="news-card-date">2026.03.10</span>
+              <span class="news-card-tag">サービス</span>
+            </div>
+            <p class="news-card-title">AXコンサルティングサービスを正式リリース</p>
+          </div>
+        </a>
+      </div>
+      <div class="news-more fade-up" style="transition-delay:0.5s">
+        <a href="news.html">すべてのお知らせを見る &rarr;</a>
+      </div>
+    </div>
+  </section>
+
   <!-- Contact -->
   <section id="contact" class="section">
     <!-- bg handled by ambient canvas -->
@@ -441,6 +511,8 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
     <ul class="footer-nav">
       <li><a href="about.html">会社概要</a></li>
       <li><a href="services.html">サービス</a></li>
+      <li><a href="news.html">お知らせ</a></li>
+      <li><a href="careers.html">採用情報</a></li>
       <li><a href="contact.html">お問い合わせ</a></li>
       <li><a href="privacy.html">プライバシーポリシー</a></li>
     </ul>
