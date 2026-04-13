@@ -605,10 +605,11 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
   let W,H;
   let particles=[];
   let rectPos=[],netPos=[],textPos=[];
-  let mouse={x:-9999,y:-9999},scrollTarget=0;
+  let mouse={x:-9999,y:-9999};
   // On reload, start from current scroll position (not 0)
   const heroMaxInit=window.innerHeight*2;
   let scrollProgress=heroMaxInit>0?Math.min(1,window.scrollY/heroMaxInit):0;
+  let scrollTarget=scrollProgress;
   let hasCompletedOnce=scrollProgress>=0.98;
   let activeCount=N_BEFORE;
   let parentMap=[];
