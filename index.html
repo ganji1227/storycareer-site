@@ -445,7 +445,78 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
 // ===== Hero animation (verbatim from top-hero.html, scroll calc modified) =====
 (function(){
   'use strict';
-  const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+  const canvas=document.getElementById('c');
+  const isSafari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  // Safari: always use WebGL. Others: start with 2D, switch to WebGL if FPS is low
+  let useWebGL=isSafari;
+  let gl=null,ctx=null;
+  // Overlay canvas for white fill (used in WebGL mode)
+  const overlayCanvas=document.createElement('canvas');
+  overlayCanvas.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%';
+  const octx=overlayCanvas.getContext('2d');
+
+  // WebGL setup
+  let glProgram,glPosBuffer,glColorBuffer,glSizeBuffer;
+  const GL_MAX=3500;
+  const glPosData=new Float32Array(GL_MAX*2);
+  const glColorData=new Float32Array(GL_MAX*4);
+  const glSizeData=new Float32Array(GL_MAX);
+  let glCount=0;
+
+  function initWebGL(){
+    gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:false,antialias:false})||canvas.getContext('experimental-webgl',{alpha:true,premultipliedAlpha:false,antialias:false});
+    if(!gl){useWebGL=false;ctx=canvas.getContext('2d');return}
+    canvas.parentNode.appendChild(overlayCanvas);
+    const vsSource=`
+      attribute vec2 aPos;
+      attribute vec4 aColor;
+      attribute float aSize;
+      varying vec4 vColor;
+      uniform vec2 uRes;
+      void main(){
+        vec2 clip=((aPos/uRes)*2.0-1.0)*vec2(1,-1);
+        gl_Position=vec4(clip,0,1);
+        gl_PointSize=aSize;
+        vColor=aColor;
+      }`;
+    const fsSource=`
+      precision mediump float;
+      varying vec4 vColor;
+      void main(){
+        float d=length(gl_PointCoord-0.5)*2.0;
+        float glow=exp(-d*d*2.0);
+        if(glow<0.003)discard;
+        gl_FragColor=vec4(vColor.rgb,vColor.a*glow);
+      }`;
+    function compileShader(src,type){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s}
+    const vs=compileShader(vsSource,gl.VERTEX_SHADER);
+    const fs=compileShader(fsSource,gl.FRAGMENT_SHADER);
+    glProgram=gl.createProgram();gl.attachShader(glProgram,vs);gl.attachShader(glProgram,fs);gl.linkProgram(glProgram);gl.useProgram(glProgram);
+    glPosBuffer=gl.createBuffer();glColorBuffer=gl.createBuffer();glSizeBuffer=gl.createBuffer();
+    gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+    gl.clearColor(0,0,0,0);
+  }
+
+  if(useWebGL){initWebGL()}
+  if(!useWebGL){ctx=canvas.getContext('2d')}
+
+  // FPS detection: switch to WebGL if Canvas 2D is too slow
+  let _fpsFrames=0,_fpsStart=0,_fpsChecked=false;
+  function checkFPS(){
+    if(_fpsChecked||useWebGL)return;
+    if(_fpsStart===0){_fpsStart=performance.now();return}
+    _fpsFrames++;
+    if(_fpsFrames>=60){
+      const elapsed=performance.now()-_fpsStart;
+      const fps=_fpsFrames/(elapsed/1000);
+      if(fps<30){
+        // Low FPS: switch to WebGL
+        useWebGL=true;initWebGL();
+      }
+      _fpsChecked=true;
+    }
+  }
+
   const isMobile=window.innerWidth<768;
   const N_BEFORE=isMobile?200:500;
   const N_TOTAL=isMobile?600:2300;
@@ -539,7 +610,10 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
   function resize(){
     W=window.innerWidth;H=window.innerHeight;
     canvas.width=W*dpr;canvas.height=H*dpr;
-    ctx.setTransform(dpr,0,0,dpr,0,0);
+    overlayCanvas.width=W*dpr;overlayCanvas.height=H*dpr;
+    octx.setTransform(dpr,0,0,dpr,0,0);
+    if(useWebGL&&gl){gl.viewport(0,0,canvas.width,canvas.height)}
+    else if(ctx){ctx.setTransform(dpr,0,0,dpr,0,0)}
     genRect();genNet();genTextShape();genJpText();genAmbientPositions();
     if(particles.length===0){initP();initJpParticles()}
   }
@@ -797,7 +871,10 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
   function onTM(e){if(e.touches.length>0){mouse.x=e.touches[0].clientX;mouse.y=e.touches[0].clientY}}function onTE(){mouse.x=-9999;mouse.y=-9999}
 
   function animate(){
-    requestAnimationFrame(animate);updateScroll();ctx.clearRect(0,0,W,H);const now=performance.now();
+    requestAnimationFrame(animate);updateScroll();checkFPS();
+    if(useWebGL&&gl){gl.clear(gl.COLOR_BUFFER_BIT);glCount=0}else if(ctx){ctx.clearRect(0,0,W,H)}
+    octx.clearRect(0,0,W,H);
+    const now=performance.now();
     let phase,phaseT=0;
     // Mobile: phases start much earlier (rect ends at 2% instead of 8%)
     // Mobile: rect 0.5%, organic at 92% (minimal dead space)
@@ -1029,7 +1106,22 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
       const flashAlphaBoost=1+pfEased*6*waveIntensity;
       const glowR=Math.min(glowCap,pt.glowRadius*(1-edgeBoost*0.3)*flashGrow);
       const coreAlpha=Math.min(1,pt.alpha*(1+edgeBoost*0.4)*flashAlphaBoost);
-      if(isMobile){
+      if(useWebGL&&gl){
+        // WebGL: add to batch
+        const cw=vT*60+edgeBoost*40;
+        if(glCount<GL_MAX){
+          const idx=glCount;
+          glPosData[idx*2]=drawX*dpr;glPosData[idx*2+1]=drawY*dpr;
+          glColorData[idx*4]=Math.min(255,fr+cw)/255;
+          glColorData[idx*4+1]=Math.min(255,fg+cw)/255;
+          glColorData[idx*4+2]=Math.min(255,fb+cw)/255;
+          glColorData[idx*4+3]=Math.min(1,coreAlpha);
+          // Use smaller point size: core radius for normal, scale up during flash only
+          const webglSize=Math.min(80,pt.radius*flashGrow*6)*dpr;
+          glSizeData[idx]=webglSize;
+          glCount++;
+        }
+      }else if(isMobile){
         const isOrgEdge=(tp&&tp.isEdge&&phase==='organic'&&pastHeroT<0.3)?1:0;
         const cw=vT*60+edgeBoost*40+isOrgEdge*60;
         const mAlpha=Math.min(1,coreAlpha*(isOrgEdge?1.5:0.8));
@@ -1047,20 +1139,18 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
         ctx.beginPath();ctx.arc(drawX,drawY,pt.radius*flashGrow*0.5,0,Math.PI*2);ctx.fill();
       }
     }
-    // White fill — fade in during flash, then gradually fade out
-    // Use a separate tracker so fade-out is smooth, not instant
+    // White fill — on overlay canvas (works for both modes)
     if(!window._whiteFillAlpha)window._whiteFillAlpha=0;
     if(flashT>0.2){
-      // Fade in
       const target=Math.min(1,Math.pow((flashT-0.2)/0.4,1.5));
       window._whiteFillAlpha=Math.max(window._whiteFillAlpha,target);
     }else if(window._whiteFillAlpha>0){
-      // Gradual fade out — takes ~60 frames (1 second at 60fps)
       window._whiteFillAlpha=Math.max(0,window._whiteFillAlpha-0.018);
     }
     if(window._whiteFillAlpha>0.001){
-      ctx.fillStyle=`rgba(245,244,240,${window._whiteFillAlpha})`;
-      ctx.fillRect(0,0,W,H);
+      const fillCtx=useWebGL?octx:ctx;
+      fillCtx.fillStyle=`rgba(245,244,240,${window._whiteFillAlpha})`;
+      fillCtx.fillRect(0,0,W,H);
     }
     // debug removed
 
@@ -1124,7 +1214,15 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
         if(a<0.01)continue;
         const oR=255,oG=Math.round(140+jp.colorT*60),oB=Math.round(30+jp.colorT*40);
         const pR=jp.radius*(1+scatterT*0.6);
-        if(isMobile){
+        if(useWebGL&&gl){
+          if(glCount<GL_MAX){
+            const idx=glCount;
+            glPosData[idx*2]=x*dpr;glPosData[idx*2+1]=y*dpr;
+            glColorData[idx*4]=oR/255;glColorData[idx*4+1]=(oG+30)/255;glColorData[idx*4+2]=(oB+20)/255;glColorData[idx*4+3]=a*0.95;
+            glSizeData[idx]=pR*4*dpr;
+            glCount++;
+          }
+        }else if(isMobile){
           ctx.fillStyle=`rgba(${oR},${Math.min(255,oG+50)},${oB+30},${a*0.85})`;
           ctx.beginPath();ctx.arc(x,y,pR*1.3,0,Math.PI*2);ctx.fill();
         }else{
@@ -1138,6 +1236,25 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
           ctx.beginPath();ctx.arc(x,y,pR,0,Math.PI*2);ctx.fill();
         }
       }
+    }
+
+    // Flush WebGL batch (after all particles added)
+    if(useWebGL&&gl&&glCount>0){
+      const uRes=gl.getUniformLocation(glProgram,'uRes');
+      gl.uniform2f(uRes,canvas.width,canvas.height);
+      const aPos=gl.getAttribLocation(glProgram,'aPos');
+      gl.bindBuffer(gl.ARRAY_BUFFER,glPosBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER,glPosData.subarray(0,glCount*2),gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);
+      const aColor=gl.getAttribLocation(glProgram,'aColor');
+      gl.bindBuffer(gl.ARRAY_BUFFER,glColorBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER,glColorData.subarray(0,glCount*4),gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(aColor);gl.vertexAttribPointer(aColor,4,gl.FLOAT,false,0,0);
+      const aSize=gl.getAttribLocation(glProgram,'aSize');
+      gl.bindBuffer(gl.ARRAY_BUFFER,glSizeBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER,glSizeData.subarray(0,glCount),gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(aSize);gl.vertexAttribPointer(aSize,1,gl.FLOAT,false,0,0);
+      gl.drawArrays(gl.POINTS,0,glCount);
     }
   }
 
