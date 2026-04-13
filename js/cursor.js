@@ -2,6 +2,15 @@
 // Initializes immediately to minimize flash of default cursor
 // Inline style already hides cursor via *{cursor:none!important} in <head>
 (function(){
+  // Skip custom cursor on touch devices (mobile/tablet)
+  if('ontouchstart' in window||navigator.maxTouchPoints>0){
+    document.documentElement.style.cursor='';
+    var style=document.createElement('style');
+    style.textContent='*{cursor:auto!important}';
+    document.head.appendChild(style);
+    window._cursorPulse=0;
+    return;
+  }
   // Ensure cursor is hidden even before CSS fully loads
   document.documentElement.style.cursor='none';
   // Expose click pulse globally so page-specific particle systems can react
