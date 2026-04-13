@@ -29,11 +29,18 @@ canvas#c{display:block;width:100%;height:100%}
 .hero-text .subtitle{font-family:'Noto Sans JP',sans-serif;font-size:clamp(0.7rem,1.4vw,1rem);font-weight:300;letter-spacing:0.35em;color:rgba(255,255,255,0.5);margin-top:1.2rem;opacity:0;transition:opacity 0.8s ease}
 .hero-text .subtitle.visible{opacity:1}
 #progress-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#4a90d9,#ffaa44);z-index:10;width:0%;transition:none}
-.scroll-indicator{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:0.5rem;opacity:0.6;transition:opacity 0.5s}
+.scroll-indicator{position:fixed;bottom:15%;left:50%;transform:translateX(-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:0.3rem;transition:opacity 0.5s}
 .scroll-indicator.hidden{opacity:0;pointer-events:none}
-.scroll-indicator span{font-family:'Noto Sans JP',sans-serif;font-size:0.65rem;letter-spacing:0.2em;color:rgba(255,255,255,0.4);font-weight:300}
-.scroll-arrow{width:16px;height:16px;border-right:1px solid rgba(255,255,255,0.35);border-bottom:1px solid rgba(255,255,255,0.35);transform:rotate(45deg);animation:scrollBounce 2s ease-in-out infinite}
-@keyframes scrollBounce{0%,100%{transform:translateY(0) rotate(45deg)}50%{transform:translateY(6px) rotate(45deg)}}
+.scroll-indicator-text{font-family:'Noto Serif JP',serif;font-size:1.05rem;letter-spacing:0.4em;color:rgba(255,255,255,0.55);font-weight:300}
+.scroll-indicator-line{width:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,170,68,0.8),transparent);animation:scrollLineExpand 3s ease-in-out infinite}
+.scroll-indicator-arrows{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:0.5rem}
+.scroll-indicator-arrows i{display:block;width:13px;height:13px;border-right:1.5px solid rgba(255,255,255,0.35);border-bottom:1.5px solid rgba(255,255,255,0.35);transform:rotate(45deg);opacity:0;animation:scrollCascade 2s ease-in-out infinite}
+.scroll-indicator-arrows i:nth-child(1){animation-delay:0s}
+.scroll-indicator-arrows i:nth-child(2){animation-delay:0.15s}
+.scroll-indicator-arrows i:nth-child(3){animation-delay:0.3s}
+@keyframes scrollPulse{0%,100%{opacity:0.4}50%{opacity:0.8}}
+@keyframes scrollLineExpand{0%,100%{width:0}50%{width:80px}}
+@keyframes scrollCascade{0%{opacity:0}40%{opacity:0.6}60%{opacity:0.6}100%{opacity:0}}
 
 /* ===== Ambient background canvas ===== */
 /* ambient canvas removed — hero canvas becomes ambient */
@@ -265,7 +272,7 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
 <div id="hero-scroll-space"></div>
 <div id="canvas-container"><canvas id="c"></canvas></div><div id="glow-overlay"></div>
 <div class="hero-text"><h1 id="mainText"></h1><p class="subtitle" id="subtitle">STORY CAREER</p></div>
-<div id="progress-bar"></div><div class="scroll-indicator" id="scrollIndicator"><span>SCROLL</span><div class="scroll-arrow"></div></div>
+<div id="progress-bar"></div><div class="scroll-indicator" id="scrollIndicator"><p class="scroll-indicator-text">SCROLL</p><div class="scroll-indicator-line"></div><div class="scroll-indicator-arrows"><i></i><i></i><i></i></div></div>
 
 <!-- Hero canvas serves as ambient bg when scrolled past -->
 
