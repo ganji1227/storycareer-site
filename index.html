@@ -1009,13 +1009,6 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
         drawX+=Math.cos(angle)*burstEased*speed+Math.sin(angle+1.57)*wobble;
         drawY+=Math.sin(angle)*burstEased*speed+Math.cos(angle+1.57)*wobble;
       }
-      // Apply cursor repulsion to draw position (so scattered particles still react)
-      if(waveProgress>0){
-        const ddx=drawX-mouse.x,ddy=drawY-mouse.y,ddist=Math.sqrt(ddx*ddx+ddy*ddy);
-        const drawCursorR=120;
-        if(ddist<drawCursorR&&ddist>0){const df=(1-ddist/drawCursorR)*0.6;drawX+=ddx/ddist*df*30;drawY+=ddy/ddist*df*30}
-        if(pulse>0.01){const dpR=drawCursorR+pulse*100;if(ddist<dpR&&ddist>0){const dpf=(1-ddist/dpR)*pulse*1.25;drawX+=ddx/ddist*dpf*20;drawY+=ddy/ddist*dpf*20}}
-      }
       // Skip off-screen particles
       if(drawX<-glowCap||drawX>W+glowCap||drawY<-glowCap||drawY>H+glowCap)continue;
 
