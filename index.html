@@ -257,8 +257,10 @@ footer.is-light .footer-nav a:hover{color:rgba(10,10,10,0.8)}
 .footer-copy{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.7rem;color:rgba(255,255,255,0.2);letter-spacing:0.1em;margin-top:2rem;grid-column:1/-1;text-align:center;transition:color 0.5s}
 footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
 
+.sp-only{display:none}
 /* ===== Responsive ===== */
 @media(max-width:768px){
+  .sp-only{display:inline}
   .section{padding:60px 0}
   .section-inner{padding:0 24px}
   .whatwedo-cols{grid-template-columns:1fr;gap:0}
@@ -321,7 +323,7 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
         <div class="purpose-spacer"></div>
         <p class="purpose-line fade-up" style="transition-delay:0.48s">我々は、</p>
         <div class="purpose-highlight-wrap fade-up" style="transition-delay:0.60s">
-          <p class="purpose-highlight">「AIに向いている業務は何か、人にしかできない業務は何か」</p>
+          <p class="purpose-highlight">「AIに向いている業務は何か、<br class="sp-only">人にしかできない業務は何か」</p>
         </div>
         <div class="purpose-spacer"></div>
         <p class="purpose-closing fade-up" style="transition-delay:0.72s">という問いに向き合い、そこで働く人の可能性を再定義し、</p>
