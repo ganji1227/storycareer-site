@@ -11,23 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: FTP Deploy
+      - name: FTP Deploy Theme
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: /public_html/
+          local-dir: ./theme/storycareer/
+          server-dir: /public_html/wp-content/themes/storycareer/
           exclude: |
             **/.git*
             **/.git*/**
-            .github/**
-            index.backup.html
-            index-webgl.html
-            index-safari-low-res.html
-            index-safari-simple-circles.html
-            thumbnail-designs.html
-            thumbnail-designs-b.html
-            test-scroll-indicators.html
-            *.backup.*
