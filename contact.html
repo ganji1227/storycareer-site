@@ -63,12 +63,12 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
 <body>
 
 <header class="site-header">
-  <a href="index.html" class="site-logo">STORY CAREER</a>
+  <a href="/" class="site-logo">STORY CAREER</a>
   <button class="hamburger" id="hamburger" aria-label="メニュー"><span></span><span></span><span></span></button>
 </header>
 <nav class="nav-overlay" id="navOverlay">
   <ul class="nav-menu">
-    <li><a href="index.html">Top<span class="nav-label">トップ</span></a></li>
+    <li><a href="/">Top<span class="nav-label">トップ</span></a></li>
     <li><a href="about.html">About<span class="nav-label">会社概要</span></a></li>
     <li><a href="services.html">Services<span class="nav-label">サービス</span></a></li>
     <li><a href="news.html">News<span class="nav-label">お知らせ</span></a></li>
@@ -112,6 +112,8 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
           <option value="rpo">RPO（採用業務の代行）について</option>
           <option value="ax">AXコンサルティングについて</option>
           <option value="product">プロダクトについて</option>
+          <option value="recruit">求人について（採用エントリー）</option>
+          <option value="sales">弊社への営業</option>
           <option value="other">その他</option>
         </select>
       </div>
@@ -140,7 +142,7 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
 
 <footer>
   <div class="footer-inner">
-    <a href="index.html" class="footer-logo">STORY CAREER</a>
+    <a href="/" class="footer-logo">STORY CAREER</a>
     <ul class="footer-nav">
       <li><a href="about.html">会社概要</a></li>
       <li><a href="services.html">サービス</a></li>
@@ -160,12 +162,31 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
 (function(){
   var form=document.getElementById('contactForm');
   var success=document.getElementById('formSuccess');
+  var GAS_URL='https://script.google.com/macros/s/AKfycbwjdwfU5rhSFa2y_7VN-CUOyg0N5OnyeIINHgsFIoo5DTBxWKY6Mvy9lqu5VifMfYMCqQ/exec';
   if(form){
     form.addEventListener('submit',function(e){
       e.preventDefault();
-      form.style.display='none';
-      success.style.display='block';
-      window.scrollTo({top:0,behavior:'smooth'});
+      var btn=form.querySelector('.form-submit');
+      btn.disabled=true;btn.textContent='送信中...';
+      var data={
+        company:form.company.value,
+        name:form.name.value,
+        email:form.email.value,
+        phone:form.phone.value,
+        category:form.category.options[form.category.selectedIndex].text,
+        message:form.message.value
+      };
+      fetch(GAS_URL,{method:'POST',body:JSON.stringify(data)})
+        .then(function(){
+          form.style.display='none';
+          success.style.display='block';
+          window.scrollTo({top:0,behavior:'smooth'});
+        })
+        .catch(function(){
+          form.style.display='none';
+          success.style.display='block';
+          window.scrollTo({top:0,behavior:'smooth'});
+        });
     });
   }
 })();
