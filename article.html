@@ -89,53 +89,24 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
   </ul>
 </nav>
 
-<div class="article-hero fade-up">
+<div class="article-hero fade-up" id="articleHero">
   <div class="article-meta">
-    <span class="article-date">2026.04.10</span>
-    <span class="article-tag">プロダクト</span>
+    <span class="article-date" id="articleDate"></span>
+    <span class="article-tag" id="articleTag"></span>
   </div>
-  <h1 class="article-title">AI採用社長の導入事例を公開しました</h1>
+  <h1 class="article-title" id="articleTitle">読み込み中...</h1>
   <div class="article-line"></div>
 </div>
 
-<div class="article-thumbnail fade-up" style="transition-delay:0.1s">
-  <div class="article-thumbnail-placeholder">THUMBNAIL IMAGE</div>
-</div>
+<div class="article-thumbnail fade-up" style="transition-delay:0.1s" id="articleThumb"></div>
 
-<article class="article-body fade-up" style="transition-delay:0.15s">
-  <p>これはWordPress連動時の記事テンプレートです。実際の運用では、WordPress REST APIから取得した記事の本文HTMLがここに挿入されます。</p>
-
-  <h2>見出しのスタイル（H2）</h2>
-  <p>本文のテキストはこのように表示されます。フォントサイズ、行間、文字間隔はサイト全体のトーンに合わせて設定しています。リンクは<a href="#">このように表示</a>されます。</p>
-
-  <h3>小見出しのスタイル（H3）</h3>
-  <p>段落間のスペースは読みやすさを重視して設計しています。長文の記事でも疲れにくいよう、行間を2.2に設定しています。</p>
-
-  <ul>
-    <li>リスト項目のスタイル</li>
-    <li>箇条書きはこのように表示されます</li>
-    <li>インデントと行間を適切に設定</li>
-  </ul>
-
-  <blockquote>
-    引用文はこのように、左にオレンジのボーダーが入り、背景が少し明るくなります。インタビュー記事などで活用できます。
-  </blockquote>
-
-  <h2>画像の表示</h2>
-  <p>記事内の画像は角丸で表示されます。WordPressの記事エディタから挿入された画像は、自動でこのスタイルが適用されます。</p>
-
-  <p>AIツールを活用した採用活動の設計から実行まで、STORY CAREERがどのようにクライアント企業の採用課題を解決したかをご紹介します。詳細はお気軽にお問い合わせください。</p>
+<article class="article-body fade-up" style="transition-delay:0.15s" id="articleBody">
+  <p style="text-align:center;color:rgba(10,10,10,0.3)">読み込み中...</p>
 </article>
 
-<div class="article-nav fade-up">
-  <div class="article-nav-item prev">
-    <p class="article-nav-label">&larr; 前の記事</p>
-    <p class="article-nav-title"><a href="#">コーポレートサイトをリニューアルしました</a></p>
-  </div>
-  <div class="article-nav-item next">
-    <p class="article-nav-label">次の記事 &rarr;</p>
-    <p class="article-nav-title"><a href="#">AXコンサルティングサービスを正式リリース</a></p>
-  </div>
+<div class="article-nav fade-up" id="articleNav" style="display:none">
+  <div class="article-nav-item prev" id="navPrev"></div>
+  <div class="article-nav-item next" id="navNext"></div>
 </div>
 
 <div class="article-back fade-up">
@@ -160,5 +131,72 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
 <script src="js/animations.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/cursor.js"></script>
+<script>
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var id=params.get('id');
+  if(!id){document.getElementById('articleTitle').textContent='記事が見つかりません';document.getElementById('articleBody').innerHTML='<p style="text-align:center"><a href="news.html">記事一覧に戻る</a></p>';return}
+
+  var API='https://storycareer.jp/wp/wp-json/wp/v2/posts/'+id+'?_embed';
+  fetch(API).then(function(r){if(!r.ok)throw new Error();return r.json()}).then(function(post){
+    // Title
+    document.title=post.title.rendered+' | STORY CAREER';
+    document.getElementById('articleTitle').textContent=post.title.rendered;
+
+    // Date
+    var date=new Date(post.date);
+    document.getElementById('articleDate').textContent=date.getFullYear()+'.'+('0'+(date.getMonth()+1)).slice(-2)+'.'+('0'+date.getDate()).slice(-2);
+
+    // Category
+    var tagEl=document.getElementById('articleTag');
+    if(post._embedded&&post._embedded['wp:term']&&post._embedded['wp:term'][0]&&post._embedded['wp:term'][0][0]){
+      tagEl.textContent=post._embedded['wp:term'][0][0].name;
+    }else{tagEl.style.display='none'}
+
+    // Thumbnail
+    var thumbEl=document.getElementById('articleThumb');
+    if(post._embedded&&post._embedded['wp:featuredmedia']&&post._embedded['wp:featuredmedia'][0]){
+      var src=post._embedded['wp:featuredmedia'][0].source_url;
+      thumbEl.innerHTML='<img src="'+src+'" alt="'+post.title.rendered+'">';
+    }else{thumbEl.style.display='none'}
+
+    // Body
+    document.getElementById('articleBody').innerHTML=post.content.rendered;
+
+    // OGP update
+    var ogTitle=document.querySelector('meta[property="og:title"]');
+    if(ogTitle)ogTitle.setAttribute('content',post.title.rendered+' | STORY CAREER');
+
+    // Prev/Next navigation
+    var navEl=document.getElementById('articleNav');
+    var prevEl=document.getElementById('navPrev');
+    var nextEl=document.getElementById('navNext');
+
+    // Fetch adjacent posts
+    var allAPI='https://storycareer.jp/wp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc&_fields=id,title,slug';
+    fetch(allAPI).then(function(r){return r.json()}).then(function(posts){
+      var idx=-1;
+      for(var i=0;i<posts.length;i++){if(posts[i].id==id){idx=i;break}}
+      if(idx<0)return;
+      var hasNav=false;
+      if(idx<posts.length-1){
+        var prev=posts[idx+1];
+        prevEl.innerHTML='<p class="article-nav-label">&larr; 前の記事</p><p class="article-nav-title"><a href="article.html?id='+prev.id+'">'+prev.title.rendered+'</a></p>';
+        hasNav=true;
+      }
+      if(idx>0){
+        var next=posts[idx-1];
+        nextEl.innerHTML='<p class="article-nav-label">次の記事 &rarr;</p><p class="article-nav-title"><a href="article.html?id='+next.id+'">'+next.title.rendered+'</a></p>';
+        hasNav=true;
+      }
+      if(hasNav)navEl.style.display='flex';
+    });
+
+  }).catch(function(){
+    document.getElementById('articleTitle').textContent='記事が見つかりません';
+    document.getElementById('articleBody').innerHTML='<p style="text-align:center"><a href="news.html">記事一覧に戻る</a></p>';
+  });
+})();
+</script>
 </body>
 </html>
