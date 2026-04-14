@@ -54,7 +54,7 @@
       clickPulse+=(clickPulseTarget-clickPulse)*0.1;
       if(clickPulse>0.93){
         clickPulseTarget=0;
-        if(pendingClick){location.href=pendingClick.href;pendingClick=null}
+        if(pendingClick){if(pendingClick.target==='_blank'){window.open(pendingClick.href,'_blank')}else{location.href=pendingClick.href}pendingClick=null}
       }
     }else{
       clickPulse*=0.985;

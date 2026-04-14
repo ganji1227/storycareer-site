@@ -153,6 +153,16 @@ canvas#c{display:block;width:100%;height:100%}
 .product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#4a90d9,#ffaa44);opacity:0.4;transition:opacity 0.5s}
 .product-card:hover{transform:translateY(-4px)}
 .product-card:hover::before{opacity:1}
+.product-card-note{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.65rem,0.75vw,0.72rem);color:rgba(255,255,255,0.3);letter-spacing:0.03em;line-height:1.7;margin-top:1rem;transition:color 0.5s}
+.is-light .product-card-note{color:rgba(10,10,10,0.4)}
+.product-card--featured{position:relative;border-color:rgba(212,85,42,0.2)}
+.product-card--featured::before{background:linear-gradient(90deg,#d4552a,#ffaa44)!important;opacity:0.6!important}
+.product-card--featured:hover{border-color:rgba(212,85,42,0.3);transform:translateY(-6px)}
+.product-card--featured:hover::before{opacity:1!important}
+.product-card-badge{display:inline-block;font-family:'Noto Sans JP',sans-serif;font-size:0.65rem;font-weight:400;letter-spacing:0.1em;color:#fff;background:linear-gradient(135deg,#d4552a,#ffaa44);padding:4px 12px;border-radius:10px;margin-bottom:1rem}
+.is-light .product-card-badge{background:linear-gradient(135deg,#d4552a,#e88040)}
+.product-card-link{display:inline-block;margin-top:1.2rem;font-family:'Noto Sans JP',sans-serif;font-size:0.75rem;font-weight:400;letter-spacing:0.12em;color:rgba(212,85,42,0.8);border:1px solid rgba(212,85,42,0.3);padding:8px 24px;border-radius:6px;transition:all 0.3s}
+.product-card--featured:hover .product-card-link{background:rgba(212,85,42,0.9);color:#fff;border-color:rgba(212,85,42,0.9)}
 .is-light .product-card{border-color:rgba(10,10,10,0.08);background:rgba(255,255,255,0.92)}
 .is-light .product-card:hover{border-color:rgba(10,10,10,0.15);background:rgba(255,255,255,0.9);box-shadow:0 12px 40px rgba(10,10,10,0.08)}
 .product-card-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1rem,1.3vw,1.15rem);color:rgba(255,255,255,0.9);letter-spacing:0.1em;margin-bottom:1rem;transition:color 0.5s}
@@ -407,17 +417,19 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
       <h2 class="section-heading fade-up" style="transition-delay:0.15s">プロダクト</h2>
       <div class="products-wrapper fade-up" style="transition-delay:0.25s">
         <div class="products-scroll" id="productsScroll">
-          <div class="product-card">
+          <a href="https://www.ai-hrceo.com/" target="_blank" rel="noopener" class="product-card product-card--featured" style="text-decoration:none;color:inherit;display:block">
             <h3 class="product-card-title">AI採用社長</h3>
-            <p class="product-card-desc">経営者の想い・価値観をAIが学習し、候補者と24時間対話する採用チャットボット。応募前の接点を創出し、企業理解を深めることでミスマッチを防止。</p>
-          </div>
+            <p class="product-card-desc">経営者の想い・価値観をAIが学習し、候補者と24時間対話する採用チャットボット。応募前の接点を創出し、企業理解を深めることでミスマッチを防止。AIだからこそ引き出せる候補者の"本音"は、採用マーケティングの一次情報としても活用可能。データに基づいた採用施策の立案・改善にも高い効果を発揮。</p>
+            <span class="product-card-link">詳しく見る &rarr;</span>
+          </a>
           <div class="product-card">
             <h3 class="product-card-title">キャリスキ（開発中）</h3>
-            <p class="product-card-desc">東証プライム上場企業への決定率100%の実績を持つキャリア支援ノウハウをAIに集約。高精度なスキル分析と最適なキャリアパスを提案。</p>
+            <p class="product-card-desc">東証プライム上場企業への決定率100%の実績を持つキャリア支援ノウハウを搭載したAIアプリ。求職者のスキルや価値観を高精度に分析し、個人にとっても企業にとっても本質的なマッチングを実現。互いにフィットした状態でエントリーが生まれるため、採用効率の大幅な向上にもつながる。</p>
           </div>
           <div class="product-card">
             <h3 class="product-card-title">採用マーケティングHub</h3>
             <p class="product-card-desc">エージェント・求人媒体・自社サイト等の全チャネルを一元管理し、採用工数を大幅に削減。<br>弊社独自のHRノウハウを学習したAIがデータを分析し、隠れたインサイトを可視化。入社後の活躍データとの連携で採用戦略の精度を向上。</p>
+            <p class="product-card-note">※現在は採用コンサルティング・RPOをご利用中のクライアント様に限定提供。今後一般公開を予定しています。</p>
           </div>
           <div style="flex:0 0 1px"></div><!-- spacer for last card edge -->
         </div>
