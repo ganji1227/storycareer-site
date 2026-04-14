@@ -462,18 +462,7 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
     <div class="section-inner">
       <p class="section-label fade-up">News</p>
       <h2 class="section-heading fade-up" style="transition-delay:0.15s">お知らせ</h2>
-      <div class="news-grid">
-        <a href="article-purpose-renewal.html" class="news-card fade-up" style="transition-delay:0.2s">
-          <div class="news-card-thumb"><img src="images/thumb-purpose-renewal.png" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px 8px 0 0"></div>
-          <div class="news-card-body">
-            <div class="news-card-meta">
-              <span class="news-card-date">2026.04.14</span>
-              <span class="news-card-tag">お知らせ</span>
-            </div>
-            <p class="news-card-title">新パーパス策定・サイトリニューアルのお知らせ</p>
-          </div>
-        </a>
-      </div>
+      <div class="news-grid" id="newsGrid"></div>
       <div class="news-more fade-up" style="transition-delay:0.5s">
         <a href="news.html">すべてのお知らせを見る &rarr;</a>
       </div>
@@ -1440,5 +1429,36 @@ footer.is-light .footer-copy{color:rgba(10,10,10,0.25)}
 </script>
 <script src="js/nav.js"></script>
 <script src="js/cursor.js"></script>
+<script>
+(function(){
+  var API='https://storycareer.jp/wp/wp-json/wp/v2/posts?per_page=3&_embed';
+  var grid=document.getElementById('newsGrid');
+  if(!grid)return;
+  var staticPages={'purpose-renewal':'article-purpose-renewal.html'};
+  fetch(API).then(function(r){return r.json()}).then(function(posts){
+    posts.forEach(function(post,i){
+      var date=new Date(post.date);
+      var dateStr=date.getFullYear()+'.'+('0'+(date.getMonth()+1)).slice(-2)+'.'+('0'+date.getDate()).slice(-2);
+      var thumb='';
+      if(post._embedded&&post._embedded['wp:featuredmedia']&&post._embedded['wp:featuredmedia'][0]){
+        var media=post._embedded['wp:featuredmedia'][0];
+        var src=media.media_details&&media.media_details.sizes&&media.media_details.sizes.medium?media.media_details.sizes.medium.source_url:media.source_url;
+        thumb='<img src="'+src+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px 8px 0 0">';
+      }else{thumb='IMAGE'}
+      var cats='';
+      if(post._embedded&&post._embedded['wp:term']&&post._embedded['wp:term'][0]&&post._embedded['wp:term'][0][0]){cats=post._embedded['wp:term'][0][0].name}
+      var link=staticPages[post.slug]||('article.html?id='+post.id);
+      var a=document.createElement('a');
+      a.href=link;a.className='news-card fade-up';a.style.transitionDelay=(0.2+i*0.1)+'s';
+      a.innerHTML='<div class="news-card-thumb">'+thumb+'</div>'
+        +'<div class="news-card-body"><div class="news-card-meta"><span class="news-card-date">'+dateStr+'</span>'
+        +(cats?'<span class="news-card-tag">'+cats+'</span>':'')
+        +'</div><p class="news-card-title">'+post.title.rendered+'</p></div>';
+      grid.appendChild(a);
+      setTimeout(function(){a.classList.add('visible')},200+i*100);
+    });
+  }).catch(function(){});
+})();
+</script>
 </body>
 </html>

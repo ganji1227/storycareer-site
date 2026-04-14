@@ -86,29 +86,12 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
 
 <section class="articles-section">
   <div class="articles-inner">
-    <ul class="article-list">
-
-      <li class="article-item fade-up">
-        <a href="article-purpose-renewal.html" class="article-item-link">
-        <div class="article-thumb"><img src="images/thumb-purpose-renewal.png" alt="新パーパス策定・サイトリニューアルのお知らせ" style="width:100%;height:100%;object-fit:cover"></div>
-        <div class="article-content">
-          <div class="article-meta">
-            <span class="article-date">2026.04.14</span>
-            <span class="article-tag">お知らせ</span>
-          </div>
-          <h2 class="article-title">新パーパス策定・サイトリニューアルのお知らせ</h2>
-          <p class="article-excerpt">新たなパーパス「人の可能性を再定義する。」を策定し、コーポレートサイトを全面リニューアルいたしました。</p>
-        </div>
-        </a>
-      </li>
-
+    <ul class="article-list" id="articleList">
+      <li class="article-item" style="text-align:center;padding:60px 0;color:rgba(10,10,10,0.3)">読み込み中...</li>
     </ul>
   </div>
 </section>
 
-<div class="wp-note">
-  <p>※ このページはWordPress連動を想定したプレースホルダーです。<br>実際の運用ではWordPress REST APIから記事データを取得し、動的に表示します。</p>
-</div>
 
 <footer>
   <div class="footer-inner">
@@ -128,5 +111,48 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
 <script src="js/animations.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/cursor.js"></script>
+<script>
+(function(){
+  var API='https://storycareer.jp/wp/wp-json/wp/v2/posts?per_page=20&_embed';
+  var list=document.getElementById('articleList');
+  // Slug-to-static-page mapping for articles with custom static pages
+  var staticPages={'purpose-renewal':'article-purpose-renewal.html'};
+
+  fetch(API).then(function(r){return r.json()}).then(function(posts){
+    list.innerHTML='';
+    if(!posts.length){list.innerHTML='<li class="article-item" style="text-align:center;padding:60px 0;color:rgba(10,10,10,0.3)">記事はまだありません。</li>';return}
+    posts.forEach(function(post,i){
+      var date=new Date(post.date);
+      var dateStr=date.getFullYear()+'.'+('0'+(date.getMonth()+1)).slice(-2)+'.'+('0'+date.getDate()).slice(-2);
+      var thumb='';
+      if(post._embedded&&post._embedded['wp:featuredmedia']&&post._embedded['wp:featuredmedia'][0]){
+        var media=post._embedded['wp:featuredmedia'][0];
+        var src=media.media_details&&media.media_details.sizes&&media.media_details.sizes.medium?media.media_details.sizes.medium.source_url:media.source_url;
+        thumb='<img src="'+src+'" alt="" style="width:100%;height:100%;object-fit:cover">';
+      }else{thumb='<span class="article-thumb-placeholder">IMAGE</span>'}
+      var cats='';
+      if(post._embedded&&post._embedded['wp:term']&&post._embedded['wp:term'][0]&&post._embedded['wp:term'][0][0]){cats=post._embedded['wp:term'][0][0].name}
+      var excerpt=post.excerpt.rendered.replace(/<[^>]+>/g,'').substring(0,100);
+      var link=staticPages[post.slug]||('article.html?id='+post.id);
+      var li=document.createElement('li');
+      li.className='article-item fade-up';
+      li.style.transitionDelay=(i*0.1)+'s';
+      li.innerHTML='<a href="'+link+'" class="article-item-link">'
+        +'<div class="article-thumb">'+thumb+'</div>'
+        +'<div class="article-content">'
+        +'<div class="article-meta"><span class="article-date">'+dateStr+'</span>'
+        +(cats?'<span class="article-tag">'+cats+'</span>':'')
+        +'</div>'
+        +'<h2 class="article-title">'+post.title.rendered+'</h2>'
+        +'<p class="article-excerpt">'+excerpt+'</p>'
+        +'</div></a>';
+      list.appendChild(li);
+      setTimeout(function(){li.classList.add('visible')},100+i*100);
+    });
+  }).catch(function(){
+    list.innerHTML='<li class="article-item" style="text-align:center;padding:60px 0;color:rgba(10,10,10,0.3)">記事の読み込みに失敗しました。</li>';
+  });
+})();
+</script>
 </body>
 </html>
