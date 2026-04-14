@@ -46,13 +46,13 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
 .article-body a:hover{color:rgba(212,85,42,1);border-bottom-color:rgba(212,85,42,0.6)}
 
 /* ===== Article Nav ===== */
-.article-nav{max-width:780px;margin:0 auto;padding:0 40px 4rem;display:flex;justify-content:space-between;gap:2rem;border-top:1px solid rgba(10,10,10,0.06);padding-top:2rem}
-.article-nav-item{flex:1;min-width:0}
+.article-nav{max-width:780px;margin:0 auto;padding:0 40px 4rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.article-nav-item{padding:24px 28px;border:1px solid rgba(10,10,10,0.06);border-radius:12px;background:rgba(255,255,255,0.5);transition:all 0.3s}
+.article-nav-item:hover{background:rgba(255,255,255,0.9);border-color:rgba(10,10,10,0.1);box-shadow:0 4px 20px rgba(10,10,10,0.04)}
 .article-nav-item.next{text-align:right}
-.article-nav-label{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.7rem;color:rgba(10,10,10,0.35);letter-spacing:0.1em;margin-bottom:0.4rem}
-.article-nav-title{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.85rem;color:rgba(10,10,10,0.7);letter-spacing:0.04em;line-height:1.6}
-.article-nav-title a{color:inherit;text-decoration:none;transition:color 0.3s}
-.article-nav-title a:hover{color:rgba(212,85,42,0.9)}
+.article-nav-item a{text-decoration:none;color:inherit;display:block}
+.article-nav-label{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.7rem;color:rgba(212,85,42,0.6);letter-spacing:0.12em;margin-bottom:0.6rem}
+.article-nav-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:0.9rem;color:rgba(10,10,10,0.75);letter-spacing:0.06em;line-height:1.7}
 
 /* ===== Back to list ===== */
 .article-back{text-align:center;padding-bottom:4rem}
@@ -167,6 +167,11 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
 </article>
 
 
+<div class="article-nav fade-up" id="articleNav" style="display:none">
+  <div class="article-nav-item prev" id="navPrev"></div>
+  <div class="article-nav-item next" id="navNext"></div>
+</div>
+
 <div class="article-back fade-up">
   <a href="news.html">&larr; 記事一覧に戻る</a>
 </div>
@@ -189,5 +194,34 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
 <script src="js/animations.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/cursor.js"></script>
+<script>
+(function(){
+  var SLUG='purpose-renewal';
+  var staticPages={'purpose-renewal':'article-purpose-renewal.html'};
+  var API='https://storycareer.jp/wp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc&_fields=id,title,slug';
+  fetch(API).then(function(r){return r.json()}).then(function(posts){
+    var idx=-1;
+    for(var i=0;i<posts.length;i++){if(posts[i].slug===SLUG){idx=i;break}}
+    if(idx<0)return;
+    var navEl=document.getElementById('articleNav');
+    var prevEl=document.getElementById('navPrev');
+    var nextEl=document.getElementById('navNext');
+    var hasNav=false;
+    if(idx<posts.length-1){
+      var prev=posts[idx+1];
+      var prevLink=staticPages[prev.slug]||('article.html?id='+prev.id);
+      prevEl.innerHTML='<a href="'+prevLink+'"><p class="article-nav-label">&larr; 前の記事</p><p class="article-nav-title">'+prev.title.rendered+'</p></a>';
+      hasNav=true;
+    }
+    if(idx>0){
+      var next=posts[idx-1];
+      var nextLink=staticPages[next.slug]||('article.html?id='+next.id);
+      nextEl.innerHTML='<a href="'+nextLink+'"><p class="article-nav-label">次の記事 &rarr;</p><p class="article-nav-title">'+next.title.rendered+'</p></a>';
+      hasNav=true;
+    }
+    if(hasNav){navEl.style.display='grid';setTimeout(function(){navEl.classList.add('visible')},100)}
+  });
+})();
+</script>
 </body>
 </html>
