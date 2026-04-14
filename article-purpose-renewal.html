@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新パーパス策定・サイトリニューアルのお知らせ | STORY CAREER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Noto+Serif+JP:wght@300;700&display=swap" rel="stylesheet">
+<style>*{cursor:none!important}</style>
+<link rel="stylesheet" href="css/common.css">
+<style>
+html{scroll-behavior:smooth}
+body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica Neue',Arial,sans-serif;color:rgba(10,10,10,0.75);min-height:100vh;display:flex;flex-direction:column}
+
+/* ===== Article Hero ===== */
+.article-hero{padding:160px 0 40px;max-width:780px;margin:0 auto;padding-left:40px;padding-right:40px}
+.article-meta{display:flex;gap:1rem;align-items:center;margin-bottom:1.2rem}
+.article-date{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.8rem;color:rgba(10,10,10,0.4);letter-spacing:0.05em}
+.article-tag{font-family:'Noto Sans JP',sans-serif;font-weight:400;font-size:0.65rem;color:rgba(212,85,42,0.8);letter-spacing:0.08em;background:rgba(212,85,42,0.08);padding:3px 12px;border-radius:10px}
+.article-title{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.4rem,2.8vw,2rem);color:rgba(10,10,10,1);letter-spacing:0.1em;line-height:1.8;margin-bottom:1.5rem}
+.article-line{width:40px;height:1px;background:linear-gradient(90deg,rgba(212,85,42,0.4),transparent)}
+
+/* ===== Thumbnail ===== */
+.article-thumbnail{max-width:780px;margin:2rem auto;padding:0 40px}
+.article-thumbnail img{width:100%;height:auto;border-radius:12px;display:block}
+.article-thumbnail-placeholder{width:100%;height:400px;border-radius:12px;background:rgba(10,10,10,0.04);display:flex;align-items:center;justify-content:center;font-family:'Noto Sans JP',sans-serif;font-size:0.75rem;color:rgba(10,10,10,0.2);letter-spacing:0.1em}
+
+/* ===== Article Body ===== */
+.article-body{max-width:780px;margin:0 auto;padding:3rem 40px 4rem;flex:1}
+.article-body h2{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1.1rem,1.6vw,1.35rem);color:rgba(10,10,10,0.95);letter-spacing:0.1em;line-height:1.8;margin:3rem 0 1.2rem;padding-bottom:0.6rem;border-bottom:1px solid rgba(10,10,10,0.06)}
+.article-body h3{font-family:'Noto Serif JP',serif;font-weight:300;font-size:clamp(1rem,1.3vw,1.15rem);color:rgba(10,10,10,0.9);letter-spacing:0.08em;line-height:1.7;margin:2rem 0 0.8rem}
+.article-body p{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.88rem,1vw,0.95rem);color:rgba(10,10,10,0.7);letter-spacing:0.04em;line-height:2.2;margin-bottom:1.5rem}
+.article-body ul,.article-body ol{margin:1rem 0 1.5rem 1.5rem;font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:clamp(0.85rem,0.95vw,0.92rem);color:rgba(10,10,10,0.7);line-height:2.2}
+.article-body li{margin-bottom:0.3rem}
+.article-body blockquote{margin:2rem 0;padding:1.5rem 2rem;border-left:3px solid rgba(212,85,42,0.3);background:rgba(255,255,255,0.5);border-radius:0 8px 8px 0;font-style:italic;color:rgba(10,10,10,0.6)}
+.article-body img{max-width:100%;height:auto;border-radius:8px;margin:1.5rem 0}
+.article-body a{color:rgba(212,85,42,0.8);text-decoration:none;border-bottom:1px solid rgba(212,85,42,0.2);transition:all 0.3s}
+.article-body a:hover{color:rgba(212,85,42,1);border-bottom-color:rgba(212,85,42,0.6)}
+
+/* ===== Article Nav ===== */
+.article-nav{max-width:780px;margin:0 auto;padding:0 40px 4rem;display:flex;justify-content:space-between;gap:2rem;border-top:1px solid rgba(10,10,10,0.06);padding-top:2rem}
+.article-nav-item{flex:1;min-width:0}
+.article-nav-item.next{text-align:right}
+.article-nav-label{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.7rem;color:rgba(10,10,10,0.35);letter-spacing:0.1em;margin-bottom:0.4rem}
+.article-nav-title{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.85rem;color:rgba(10,10,10,0.7);letter-spacing:0.04em;line-height:1.6}
+.article-nav-title a{color:inherit;text-decoration:none;transition:color 0.3s}
+.article-nav-title a:hover{color:rgba(212,85,42,0.9)}
+
+/* ===== Back to list ===== */
+.article-back{text-align:center;padding-bottom:4rem}
+.article-back a{font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:0.85rem;color:rgba(10,10,10,0.5);letter-spacing:0.1em;text-decoration:none;transition:color 0.3s}
+.article-back a:hover{color:rgba(212,85,42,0.9)}
+
+/* ===== Responsive ===== */
+.article-body .highlight{text-decoration:underline;text-decoration-color:rgba(212,85,42,0.45);text-underline-offset:0.4em;text-decoration-thickness:1.5px;font-weight:400}
+@media(max-width:768px){
+  .article-hero{padding:130px 24px 30px}
+  .article-thumbnail{padding:0 24px}
+  .article-thumbnail-placeholder{height:220px}
+  .article-body{padding:2rem 24px 3rem}
+  .article-nav{padding:0 24px 3rem;flex-direction:column}
+  .article-nav-item.next{text-align:left}
+  .article-back{padding-bottom:3rem}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="site-logo">STORY CAREER</a>
+  <button class="hamburger" id="hamburger" aria-label="メニュー"><span></span><span></span><span></span></button>
+</header>
+<nav class="nav-overlay" id="navOverlay">
+  <ul class="nav-menu">
+    <li><a href="index.html">Top<span class="nav-label">トップ</span></a></li>
+    <li><a href="about.html">About<span class="nav-label">会社概要</span></a></li>
+    <li><a href="services.html">Services<span class="nav-label">サービス</span></a></li>
+    <li><a href="news.html">News<span class="nav-label">お知らせ</span></a></li>
+    <li><a href="careers.html">Careers<span class="nav-label">採用情報</span></a></li>
+    <li><a href="contact.html">Contact<span class="nav-label">お問い合わせ</span></a></li>
+    <li><a href="privacy.html">Privacy Policy<span class="nav-label">プライバシーポリシー</span></a></li>
+  </ul>
+</nav>
+
+<div class="article-hero fade-up">
+  <div class="article-meta">
+    <span class="article-date">2026.04.14</span>
+    <span class="article-tag">お知らせ</span>
+  </div>
+  <h1 class="article-title">新パーパス策定・サイトリニューアルのお知らせ</h1>
+  <div class="article-line"></div>
+</div>
+
+<div class="article-thumbnail fade-up" style="transition-delay:0.1s">
+  <div class="article-thumbnail-placeholder">THUMBNAIL IMAGE</div>
+</div>
+
+<article class="article-body fade-up" style="transition-delay:0.15s">
+
+  <h2>新たなパーパスを策定しました</h2>
+
+  <p>このたび、STORY CAREERは新たなパーパス「<span class="highlight">人の可能性を再定義する。</span>」を策定し、コーポレートサイトを全面リニューアルいたしました。</p>
+
+  <h2>刷新の背景</h2>
+
+  <p>STORY CAREERは2015年の創業以来、「<strong>個人の働き甲斐を最大化し、企業・社会への価値提供を最大化する</strong>」をMissionに掲げ、ヒューマンサイエンスに基づく新卒・第二新卒層のキャリア支援と、企業向けの採用コンサルティング・RPOを展開してまいりました。</p>
+
+  <p>近年、AI技術の急速な発展に伴い、多くの企業がAX（AI Transformation）に取り組み始めています。弊社も自社プロダクトの開発やクライアント企業へのAXコンサルティングを通じて、AIがもたらす業務変革の可能性を強く実感してきました。</p>
+
+  <p>一方で、現在のAXに関する議論の多くは、工数削減やコスト最適化の段階に留まっているケースが多いと感じています。「AIで業務を効率化し、人員や採用を縮小する」——こうした判断は短期的には合理的ですが、本来AXが企業にもたらすべき価値は、<span class="highlight">コスト削減の先にある「付加価値の創出」</span>にあると私たちは考えます。</p>
+
+  <p>今後、AIの導入が企業にとって当たり前となる時代において、AIの活用だけで競争優位を築くことは難しくなります。その中で差別化の鍵となるのは、<span class="highlight">社員一人ひとりが持つ「その人らしさ」、その集合体である「その企業らしさ」</span>を事業に活かし、独自の付加価値へと昇華させることだと考えています。</p>
+
+  <p>AIが日に日に多くの業務を代替できるようになっていくに連れ、人事やHR領域で事業を行う人間に求められる役割も大きく変化していくべきだと感じています。採用要件の再定義、人材配置の最適化、組織として注力すべき領域の見極め——AIの活用によって生まれた余力を、いかに企業の成長に接続していくか。HRのプロフェッショナルとして、この問いに正面から向き合い続けることが、弊社の使命であると考えています。</p>
+
+  <p>こうした背景のもと、新たなパーパス「<strong>人の可能性を再定義する。</strong>」を策定いたしました。AIと人、その両方の力を引き出しながら、変化し続けるAI時代の"価値の源泉"を問い直し、人と組織の可能性を最大化してまいります。</p>
+
+  <h2>なぜ「人の可能性を再定義する。」なのか</h2>
+
+  <p>AI技術の進化により、これまで人が担ってきた多くの業務が自動化・効率化されつつあります。この流れは今後さらに加速していくでしょう。</p>
+
+  <p>そうした中で、私たちが注目しているのは、効率化のその先にある問いです。AIが当たり前に使われる時代において、企業や個人の"価値の源泉"はどこにあるのか。</p>
+
+  <p>組織が持つ固有のデータ、現場で培われた判断と文化、そして一人ひとりの「その人らしさ」。AIの台頭により、これらは新たな競争力としての意味を持ち始めています。しかし、何が競争力となるかは、AIの進化とともに変わり続けていくものです。</p>
+
+  <p>だからこそ、<span class="highlight">"価値の源泉"を絶えず問い直し、"人の可能性を再定義"し続ける</span>ことが必要だと考えます。創業以来培ってきた「ヒューマンサイエンス」の知見を基盤に、AI×HRの領域において、人と組織が持つ固有の価値を見出し、事業成長へとつなげていく。それが、新たなパーパスに込めた想いです。</p>
+
+  <h2>HR × AXの両面事業体制へ</h2>
+
+  <p>新パーパスのもと、STORY CAREERは以下の領域でサービスを展開してまいります。</p>
+
+  <ul>
+    <li><strong>採用コンサルティング</strong> — ペルソナ設計、データドリブンな母集団形成と候補者体験の設計</li>
+    <li><strong>RPO（採用業務の代行）</strong> — 採用活動の設計・運用・改善をワンストップで</li>
+    <li><strong>AXコンサルティング</strong> — AI導入の戦略策定から業務実装まで伴走</li>
+    <li><strong>HRプロダクトの開発・運営</strong> — HR×AIの独自プロダクトを企画・開発・運用</li>
+  </ul>
+
+  <h2>サイトリニューアルについて</h2>
+
+  <p>パーパス刷新に合わせて、コーポレートサイトを全面リニューアルいたしました。</p>
+
+  <p>トップページでは、新パーパスの世界観を表現したアニメーションを採用しています。画面上に現れる光の粒子は、組織の中で働く「一人ひとりの人間」を表現しています。</p>
+
+  <p>冒頭で粒子が整然と並ぶ様子は、従来型の組織の在り方を表現しています。多くの組織では、個人が組織の方針に合わせ、定型的な業務を遂行することが求められてきました。しかし、そうした業務の多くは、今後AIが担えるようになっていきます。</p>
+
+  <p>これからの組織において競争力の鍵を握るのは、"一人ひとりの個性"や"その組織らしさ"であると考えています。アニメーションの中で粒子が生き生きと輝き、自ら動き出し、やがて「Potential」という文字を描き出す——それは、<span class="highlight">個々の可能性が解放されることこそが、組織の新たな競争優位性を生み出す</span>というメッセージを込めたものです。</p>
+
+  <p>さらに、「人の可能性を再定義する。」のメッセージが浮かび上がった後、粒子は一つひとつ輝きながら画面の外へと飛び出していきます。既存の枠にとどまらず、人と組織の可能性を広げていくというSTORY CAREERの思想を表現しています。</p>
+
+  <p>また、パソコンでご覧いただくと、マウスポインターがオレンジ色の光の粒子に変わります。これは、現時点ではまだ見えていない、あるいはAIの台頭によって今後新たに生まれてくる"価値の源泉"——人や組織の可能性——を照らし出し、探し続ける光をイメージしたものです。</p>
+
+  <p>※本サイトはAIツールのみを用いてコードを一行も書かずに構築しています。</p>
+
+  <p>今回のパーパス刷新にともない、今後は「HR × AX」という2つの領域に注力してまいります。企業や人の可能性を最大化し、事業成長につなげられるよう邁進してまいります。</p>
+
+  <p>採用やAX（AI活用）に関するご相談がございましたら、お気軽にお問い合わせください。</p>
+
+</article>
+
+
+<div class="article-back fade-up">
+  <a href="news.html">&larr; 記事一覧に戻る</a>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">STORY CAREER</a>
+    <ul class="footer-nav">
+      <li><a href="about.html">会社概要</a></li>
+      <li><a href="services.html">サービス</a></li>
+      <li><a href="news.html">お知らせ</a></li>
+      <li><a href="careers.html">採用情報</a></li>
+      <li><a href="contact.html">お問い合わせ</a></li>
+      <li><a href="privacy.html">プライバシーポリシー</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2026 STORY CAREER Inc.</p>
+  </div>
+</footer>
+
+<script src="js/animations.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/cursor.js"></script>
+</body>
+</html>
