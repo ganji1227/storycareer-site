@@ -127,7 +127,7 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
       var thumb='';
       if(post._embedded&&post._embedded['wp:featuredmedia']&&post._embedded['wp:featuredmedia'][0]){
         var media=post._embedded['wp:featuredmedia'][0];
-        var src=media.media_details&&media.media_details.sizes&&media.media_details.sizes.medium?media.media_details.sizes.medium.source_url:media.source_url;
+        var src=media.source_url;
         thumb='<img src="'+src+'" alt="" style="width:100%;height:100%;object-fit:cover">';
       }else{thumb='<span class="article-thumb-placeholder">IMAGE</span>'}
       var cats='';
