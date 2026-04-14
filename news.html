@@ -31,7 +31,8 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
 .articles-section{padding:40px 0 120px;flex:1}
 .articles-inner{max-width:900px;margin:0 auto;padding:0 40px}
 .article-list{list-style:none}
-.article-item{border-bottom:1px solid rgba(10,10,10,0.06);padding:28px 0;display:flex;gap:24px;align-items:flex-start;transition:background 0.3s}
+.article-item{border-bottom:1px solid rgba(10,10,10,0.06);padding:28px 0;transition:background 0.3s}
+.article-item-link{display:flex;gap:24px;align-items:flex-start;text-decoration:none;color:inherit}
 .article-item:hover{background:rgba(255,255,255,0.5);margin:0 -16px;padding-left:16px;padding-right:16px;border-radius:8px}
 .article-thumb{width:160px;height:100px;border-radius:8px;background:rgba(10,10,10,0.04);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .article-thumb-placeholder{font-family:'Noto Sans JP',sans-serif;font-size:0.65rem;color:rgba(10,10,10,0.2);letter-spacing:0.1em}
@@ -88,15 +89,17 @@ body{background:#f5f4f0;overflow-x:hidden;font-family:'Noto Sans JP','Helvetica 
     <ul class="article-list">
 
       <li class="article-item fade-up">
+        <a href="article-purpose-renewal.html" class="article-item-link">
         <div class="article-thumb"><img src="images/thumb-purpose-renewal.png" alt="新パーパス策定・サイトリニューアルのお知らせ" style="width:100%;height:100%;object-fit:cover"></div>
         <div class="article-content">
           <div class="article-meta">
             <span class="article-date">2026.04.14</span>
             <span class="article-tag">お知らせ</span>
           </div>
-          <h2 class="article-title"><a href="article-purpose-renewal.html">新パーパス策定・サイトリニューアルのお知らせ</a></h2>
+          <h2 class="article-title">新パーパス策定・サイトリニューアルのお知らせ</h2>
           <p class="article-excerpt">新たなパーパス「人の可能性を再定義する。」を策定し、コーポレートサイトを全面リニューアルいたしました。</p>
         </div>
+        </a>
       </li>
 
     </ul>
