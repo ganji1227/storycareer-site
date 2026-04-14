@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 60">
+  <defs>
+    <radialGradient id="glow-light" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgb(255,245,230)" stop-opacity="0.9"/>
+      <stop offset="18%" stop-color="rgb(230,130,55)" stop-opacity="0.45"/>
+      <stop offset="40%" stop-color="rgb(212,85,42)" stop-opacity="0.1"/>
+      <stop offset="68%" stop-color="rgb(212,85,42)" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="28" cy="30" r="28" fill="url(#glow-light)"/>
+  <text x="74" y="34" font-family="'Noto Serif JP', serif" font-weight="700" font-size="24" letter-spacing="3.6" fill="rgba(10,10,10,0.88)">STORY CAREER</text>
+  <text x="74" y="48" font-family="'Noto Sans JP', sans-serif" font-weight="300" font-size="9" letter-spacing="2.7" fill="rgba(10,10,10,0.35)">人の可能性を再定義する。</text>
+</svg>
