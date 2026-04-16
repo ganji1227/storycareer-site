@@ -22,7 +22,7 @@ jobs:
 
       - name: Deploy via rsync
         run: |
-          rsync -avz --delete \
+          rsync -avz \
             -e "ssh -i ~/.ssh/deploy_key -p 10022" \
             ./theme/storycareer/ \
             story-weaver@sv1444.xserver.jp:/home/story-weaver/storycareer.jp/public_html/wp-content/themes/storycareer/
